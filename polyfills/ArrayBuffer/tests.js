@@ -416,3 +416,17 @@ describe('ArrayBuffer.prototype.slice', function () {
         proclaim.deepStrictEqual(arrayBuffer.slice().byteLength, 10);
     });
 });
+
+describe('ArrayBuffer.prototype.byteLength', function () {
+    it('throws a TypeError if called by something without an [[ArrayBufferData]] internal slot', function () {
+        proclaim.throws(function () {
+            ArrayBuffer.prototype.byteLength;
+        }, TypeError);
+    });
+
+    it('is the value of the [[ByteLength]] internal slot', function () {
+        proclaim.deepStrictEqual(new ArrayBuffer(0).byteLength, 0);
+
+        proclaim.deepStrictEqual(new ArrayBuffer(9).byteLength, 9);
+    });
+});
