@@ -17,6 +17,18 @@ it('is not enumerable', function () {
 	proclaim.isNotEnumerable(Array, 'from');
 });
 
+it('returns a new instance of `this` if the `items` argument does not have an iterator', function() {
+	function E(){};
+	proclaim.isInstanceOf(Array.from.bind(E)({length: 9}), E);
+});
+
+it('passes length value to the constructor', function() {
+	function E(){
+		this.args = arguments;
+	};
+	proclaim.deepStrictEqual(Array.from.bind(E)({length: 9}).args[0], 9);
+});
+
 describe('returns an array with', function () {
 	it('arrays', function () {
 		proclaim.deepEqual(Array.from([]), []);
@@ -26,11 +38,6 @@ describe('returns an array with', function () {
 	it('fills holes in arrays', function () {
 		var arr = [1, 2, 3];
 		delete arr[1];
-		/**
-		 * These are unrolled as expect.js' eql doesn't work on
-		 * arrays created with undefined elements.
-		 * https://github.com/Automattic/expect.js/issues/140
-		 */
 		proclaim.deepEqual(Array.from(arr)[0], 1);
 		proclaim.deepEqual(Array.from(arr)[1], undefined);
 		proclaim.deepEqual(Array.from(arr)[2], 3);
