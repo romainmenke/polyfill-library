@@ -7,7 +7,7 @@
 		"default",
 		"es5",
 		"modernizr:es5function",
-		"blissfuljs"
+		"blissfuljs","es"
 	],
 	"browsers": {
 		"ie": "6 - 8",

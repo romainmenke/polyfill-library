@@ -1,6 +1,6 @@
 {
 	"aliases": [
-		"es5",
+		"es",		"es5",
 		"modernizr:es5object",
 		"default-3.3",
 		"default-3.4",

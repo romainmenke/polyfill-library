@@ -2,7 +2,8 @@
 	"aliases": [
 		"es6",
 		"es2015",
-		"modernizr:es6array"
+		"modernizr:es6array",
+		"es"
 	],
 	"browsers": {
 		"bb": "*",

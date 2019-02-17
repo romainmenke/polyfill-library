@@ -2,7 +2,7 @@
 	"aliases": [
 		"es6",
 		"es2015",
-		"Function.name"
+		"Function.name","es"
 	],
 	"browsers": {
 		"ie": "9 - 11",

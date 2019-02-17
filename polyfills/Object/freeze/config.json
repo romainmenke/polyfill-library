@@ -1,6 +1,6 @@
 {
 	"aliases": [
-		"es5"
+		"es",		"es5"
 	],
 	"browsers": {
 		"ie": "<9",

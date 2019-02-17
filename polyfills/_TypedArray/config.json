@@ -10,7 +10,8 @@
         "Float32Array",
         "Float64Array",
         "DataView",
-        "ArrayBuffer"
+        "ArrayBuffer",
+        "es"
     ],
     "browsers": {
         "android": "*",

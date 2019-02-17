@@ -1,6 +1,6 @@
 {
 	"aliases": [
-		"es7",
+		"es",		"es7",
 		"es2016"
 	],
 	"browsers": {

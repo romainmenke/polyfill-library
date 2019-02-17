@@ -1,7 +1,7 @@
 {
 	"aliases": [
 		"es6",
-		"es2015"
+		"es2015","es"
 	],
 	"browsers": {
 		"android": "*",

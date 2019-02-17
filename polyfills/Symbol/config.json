@@ -4,7 +4,8 @@
 		"es2015",
 		"Object.getOwnPropertySymbols",
 		"Symbol.for",
-		"Symbol.keyFor"
+		"Symbol.keyFor",
+		"es"
 	],
 	"browsers": {
 		"edge": "<13",

@@ -1,6 +1,6 @@
 {
 	"aliases": [
-		"modernizr:promises",
+		"es",		"modernizr:promises",
 		"caniuse:promises",
 		"blissfuljs",
 		"default-3.4",

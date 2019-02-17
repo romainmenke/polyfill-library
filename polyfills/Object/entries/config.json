@@ -1,6 +1,6 @@
 {
 	"aliases": [
-		"es2017"
+		"es","es2017"
 	],
 	"browsers": {
 		"edge": "<15",

@@ -1,6 +1,6 @@
 {
 	"aliases": [
-		"es6",
+		"es",		"es6",
 		"es2015",
 		"modernizr:es6string"
 	],

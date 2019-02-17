@@ -2,7 +2,7 @@
 	"aliases": [
 		"es7",
 		"es2016",
-		"modernizr:es7array"
+		"modernizr:es7array","es"
 	],
 	"browsers": {
 		"chrome": "<47",

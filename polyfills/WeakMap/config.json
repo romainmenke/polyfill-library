@@ -2,7 +2,8 @@
 	"aliases": [
 		"es6",
 		"es2015",
-		"blissfuljs"
+		"blissfuljs",
+		"es"
 	],
 	"browsers": {
 		"ie": "*",

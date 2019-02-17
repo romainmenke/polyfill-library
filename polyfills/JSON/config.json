@@ -6,7 +6,7 @@
 		"default-3.6",
 		"default",
 		"caniuse:json",
-		"modernizr:json"
+		"modernizr:json","es"
 	],
 	"browsers": {
 		"ie": "6 - 7",
