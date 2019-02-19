@@ -1,6 +1,8 @@
 /* eslint-env mocha */
 /* globals proclaim, Symbol */
 
+var global = typeof window != 'undefined' ? window : typeof self != 'undefined' ? self : Function('return this')();
+
 it('is a function', function () {
 	proclaim.isFunction(Symbol);
 });
@@ -14,7 +16,7 @@ it('has correct name', function () {
 });
 
 it('is not enumerable', function () {
-	proclaim.isNotEnumerable(window, 'Symbol');
+	proclaim.isNotEnumerable(global, 'Symbol');
 });
 
 var arePropertyDescriptorsSupported = function () {

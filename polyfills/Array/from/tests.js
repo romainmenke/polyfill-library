@@ -1,6 +1,8 @@
 /* eslint-env mocha */
 /* globals proclaim, Map, Symbol, Set */
 
+var global = typeof window != 'undefined' ? window : typeof self != 'undefined' ? self : Function('return this')();
+
 it('is a function', function () {
 	proclaim.isFunction(Array.from);
 });
@@ -54,7 +56,7 @@ describe('returns an array with', function () {
 			return Array.prototype.slice.call(arguments);
 		}
 
-		if ('Map' in window) {
+		if ('Map' in global) {
 			map = new Map();
 			map.set(1,2);
 			map.set(3,4);
@@ -72,7 +74,7 @@ describe('returns an array with', function () {
 			}
 		}
 
-		if ('Set' in window) {
+		if ('Set' in global) {
 			set = new Set();
 			set.add(1);
 			set.add(2);
@@ -93,7 +95,7 @@ describe('returns an array with', function () {
 			}
 		}
 
-		if ('Symbol' in window && 'iterator' in Symbol) {
+		if ('Symbol' in global && 'iterator' in Symbol) {
 			it('can understand objects which have a property named Symbol.iterator', function () {
 				var o = {};
 				o[Symbol.iterator] = function () {

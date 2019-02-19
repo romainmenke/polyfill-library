@@ -1,6 +1,8 @@
 /* eslint-env mocha */
 /* globals proclaim, Map, Symbol */
 
+var global = typeof window != 'undefined' ? window : typeof self != 'undefined' ? self : Function('return this')();
+
 it('is a function', function () {
 	proclaim.isFunction(Map);
 });
@@ -14,7 +16,7 @@ it('has correct name', function () {
 });
 
 it('is not enumerable', function () {
-	proclaim.isNotEnumerable(window, 'Map');
+	proclaim.isNotEnumerable(global, 'Map');
 });
 
 var arePropertyDescriptorsSupported = function() {
@@ -56,7 +58,7 @@ describe('Map', function () {
 		var hasGetOwnPropertyDescriptor = 'getOwnPropertyDescriptor' in Object && typeof Object.getOwnPropertyDescriptor === 'function';
 		if (hasGetOwnPropertyDescriptor) {
 			it('has correct descriptors defined for Map', function () {
-				var descriptor = Object.getOwnPropertyDescriptor(window, 'Map');
+				var descriptor = Object.getOwnPropertyDescriptor(global, 'Map');
 
 				proclaim.isTrue(descriptor.configurable);
 				try {
@@ -293,7 +295,7 @@ describe('Map', function () {
 			proclaim.equal(d.size, 3);
 		});
 
-		if ('Symbol' in window && 'iterator' in Symbol) {
+		if ('Symbol' in global && 'iterator' in Symbol) {
 			it("can be pre-populated with custom iterable", function () {
 				var count = 0;
 				var a = {};
@@ -543,7 +545,7 @@ describe('Map', function () {
 		proclaim.equal(lastResult.value, void 0);
 	});
 
-	if ('Symbol' in window && 'iterator' in Symbol) {
+	if ('Symbol' in global && 'iterator' in Symbol) {
 		it('Map.prototype[Symbol.iterator] is an alias to Map.prototype.entries', function () {
 			proclaim.strictEqual(Map.prototype[Symbol.iterator], Map.prototype.entries);
 		});

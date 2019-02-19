@@ -1,6 +1,8 @@
 /* eslint-env mocha */
 /* globals proclaim, Symbol */
 
+var global = typeof window != 'undefined' ? window : typeof self != 'undefined' ? self : Function('return this')();
+
 it('is a function', function () {
 	proclaim.isFunction(String.prototype.endsWith);
 });
@@ -57,13 +59,13 @@ it('works as expected', function () {
 	proclaim.throws(function () {
 		'/./'.endsWith(re);
 	}, TypeError);
-	if ('Symbol' in window && 'match' in Symbol) {
+	if ('Symbol' in global && 'match' in Symbol) {
 		re[typeof Symbol != 'undefined' && Symbol !== null ? Symbol.match : undefined] = false;
 		proclaim.isTrue('/./'.endsWith(re));
 	}
 	O = {};
 	proclaim.isTrue('[object Object]'.endsWith(O));
-	if ('Symbol' in window && 'match' in Symbol) {
+	if ('Symbol' in global && 'match' in Symbol) {
 		O[typeof Symbol != 'undefined' && Symbol !== null ? Symbol.match : undefined] = true;
 		proclaim.throws(function () {
 			'[object Object]'.endsWith(O);

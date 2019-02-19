@@ -1,6 +1,8 @@
 /* eslint-env mocha */
 /* globals proclaim, Promise */
 
+var global = typeof window != 'undefined' ? window : typeof self != 'undefined' ? self : Function('return this')();
+
 it('is a function', function () {
 	proclaim.isFunction(Promise);
 });
@@ -14,7 +16,7 @@ it.skip('has correct name', function () {
 });
 
 it.skip('is not enumerable', function () {
-	proclaim.isNotEnumerable(window, 'Promise');
+	proclaim.isNotEnumerable(global, 'Promise');
 });
 
 describe('Section 2.1.2.1: When fulfilled, a promise: must not transition to any other state.', function () {

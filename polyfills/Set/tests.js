@@ -1,6 +1,8 @@
 /* eslint-env mocha, browser */
 /* global proclaim, Set, Symbol */
 
+var global = typeof window != 'undefined' ? window : typeof self != 'undefined' ? self : Function('return this')();
+
 it('is a function', function () {
 	proclaim.isFunction(Set);
 });
@@ -14,7 +16,7 @@ it('has correct name', function () {
 });
 
 it('is not enumerable', function () {
-	proclaim.isNotEnumerable(window, 'Set');
+	proclaim.isNotEnumerable(global, 'Set');
 });
 
 describe('Set', function() {
@@ -128,7 +130,7 @@ describe('Set', function() {
 			proclaim.strictEqual(Set.prototype.keys, Set.prototype.values);
 		});
 
-		if ('Symbol' in window && 'iterator' in Symbol) {
+		if ('Symbol' in global && 'iterator' in Symbol) {
 			it('Set.prototype[Symbol.iterator] is an alias to Set.prototype.values', function () {
 				proclaim.strictEqual(Set.prototype[Symbol.iterator], Set.prototype.values);
 			});

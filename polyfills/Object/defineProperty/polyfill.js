@@ -3,12 +3,13 @@
 	var supportsAccessors = Object.prototype.hasOwnProperty('__defineGetter__');
 	var ERR_ACCESSORS_NOT_SUPPORTED = 'Getters & setters cannot be defined on this javascript engine';
 	var ERR_VALUE_ACCESSORS = 'A property cannot both have accessors and be writable or have a value';
+	var isBrowser = typeof window != 'undefined';
 
 	// Polyfill.io - This does not use CreateMethodProperty because our CreateMethodProperty function uses Object.defineProperty.
 	Object['defineProperty'] = function defineProperty(object, property, descriptor) {
 
 		// Where native support exists, assume it
-		if (nativeDefineProperty && (object === window || object === document || object === Element.prototype || object instanceof Element)) {
+		if (nativeDefineProperty && isBrowser && (object === window || object === document || object === Element.prototype || object instanceof Element)) {
 			return nativeDefineProperty(object, property, descriptor);
 		}
 

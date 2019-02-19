@@ -1,6 +1,8 @@
 /* eslint-env mocha */
 /* globals proclaim, WeakSet */
 
+var global = typeof window != 'undefined' ? window : typeof self != 'undefined' ? self : Function('return this')();
+
 it('is a function', function () {
 	proclaim.isFunction(WeakSet);
 });
@@ -14,7 +16,7 @@ it('has correct name', function () {
 });
 
 it('is not enumerable', function () {
-	proclaim.isNotEnumerable(window, 'WeakSet');
+	proclaim.isNotEnumerable(global, 'WeakSet');
 });
 
 it("has valid constructor", function () {
@@ -43,7 +45,7 @@ it('has add, delete and has methods', function(){
 });
 
 it('should perform as expected', function() {
-	var a = new WeakSet, b = {}, c = function(){}, d = window, e = {};
+	var a = new WeakSet, b = {}, c = function(){}, d = global, e = {};
 	var set = new WeakSet;
 
 	set.add(a);
@@ -83,11 +85,11 @@ it('should be possible to prepopulate the set', function() {
 	var ws = new WeakSet([
 		o1,
 		function(){},
-		window,
+		global,
 		{}
 	]);
 
 	proclaim.equal(ws.has({}), false);
 	proclaim.equal(ws.has(o1), true);
-	proclaim.equal(ws.has(window), true);
+	proclaim.equal(ws.has(global), true);
 });

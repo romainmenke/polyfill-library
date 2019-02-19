@@ -1,6 +1,8 @@
 /* eslint-env mocha, browser */
 /* global proclaim, WeakMap, Symbol */
 
+var global = typeof window != 'undefined' ? window : typeof self != 'undefined' ? self : Function('return this')();
+
 it('is a function', function () {
 	proclaim.isFunction(WeakMap);
 });
@@ -14,7 +16,7 @@ it('has correct name', function() {
 });
 
 it('is not enumerable', function () {
-	proclaim.isNotEnumerable(window, 'WeakMap');
+	proclaim.isNotEnumerable(global, 'WeakMap');
 });
 
 it("has valid constructor", function () {
@@ -42,7 +44,7 @@ it('should perform as expected', function() {
 	var wm = new WeakMap();
 	var o1 = {};
 	var o2 = function(){};
-	var o3 = window;
+	var o3 = global;
 	wm.set(o1, 37);
 	proclaim.equal(wm.get(o1), 37);
 
@@ -82,10 +84,10 @@ it('should be possible to prepopulate the map', function() {
 	var wm = new WeakMap([
 		[o1, 12],
 		[function(){}, 'foo'],
-		[window]
+		[global]
 	]);
 
-	proclaim.equal(wm.get(window), undefined);
+	proclaim.equal(wm.get(global), undefined);
 	proclaim.equal(wm.get(o1), 12);
 });
 
@@ -102,7 +104,7 @@ if ('freeze' in Object) {
 	});
 }
 
-if ('Symbol' in window && 'iterator' in Symbol && typeof [][Symbol.iterator] === 'function') {
+if ('Symbol' in global && 'iterator' in Symbol && typeof [][Symbol.iterator] === 'function') {
 	it('supports iterables', function () {
 		var arr = [];
 		var done = false;

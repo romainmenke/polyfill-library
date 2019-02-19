@@ -1,6 +1,8 @@
 /* eslint-env mocha, browser */
 /* global proclaim, Symbol */
 
+var global = typeof window != 'undefined' ? window : typeof self != 'undefined' ? self : Function('return this')();
+
 it('is a function', function () {
 	proclaim.isFunction(Object.seal);
 });
@@ -54,7 +56,7 @@ it('does not throw TypeError if argument is a number', function() {
 });
 
 it('does not throw TypeError if argument is a symbol', function() {
-    if ('Symbol' in self) {
+    if ('Symbol' in global) {
         proclaim.doesNotThrow(function() {
             Object.seal(Symbol());
         });
@@ -68,7 +70,7 @@ it('returns the argument', function() {
     proclaim.isFalse(Object.seal(false));
     proclaim.deepStrictEqual(Object.seal('a'), 'a');
     proclaim.deepStrictEqual(Object.seal(0), 0);
-    if ('Symbol' in self) {
+    if ('Symbol' in global) {
         var sym = Symbol();
         proclaim.deepStrictEqual(Object.seal(sym), sym);
     }
