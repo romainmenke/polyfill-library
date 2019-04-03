@@ -27,9 +27,9 @@
     "repo": "https://github.com/mo/abortcontroller-polyfill",
     "docs": "https://developer.mozilla.org/en-US/docs/Web/API/AbortController",
     "install": {
-        "module": "abortcontroller-polyfill",
+        "module": "abort-controller",
         "paths": [
-            "dist/umd-polyfill.js"
+            "dist/abort-controller.umd.js"
         ]
     }
 }
