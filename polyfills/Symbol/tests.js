@@ -30,6 +30,7 @@ var arePropertyDescriptorsSupported = function () {
 	}
 };
 var supportsDescriptors = Object.defineProperty && arePropertyDescriptorsSupported();
+var isAncientInternetExplorer = document.documentMode && document.documentMode <= 9;
 
 // https://tc39.github.io/ecma262/#sec-symbol-constructor
 it('should throw if being used via `new`', function() {
@@ -58,9 +59,18 @@ it('should return "[object Symbol]" when called with Object.prototype.toString()
 	proclaim.equal(Object.prototype.toString.call(Symbol()), '[object Symbol]');
 });
 
-it('should retain browser toString behavior for nulls and window', function() {
+if(!isAncientInternetExplorer) {
+	it('Object.prototype.toString.call(window) should be [object Window]', function() {
+		proclaim.equal(Object.prototype.toString.call(window), '[object Window]');
+	});
+}
+
+it('Object.prototype.toString.call(null) should be [object Null]', function() {
 	proclaim.equal(Object.prototype.toString.call(null), '[object Null]');
-	proclaim.notEqual(window.toString(), '[object Null]');
+});
+
+it('window.toString() should be [object Window]', function() {
+	proclaim.equal(window.toString(), '[object Window]');
 });
 
 if (supportsDescriptors) {
