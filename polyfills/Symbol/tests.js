@@ -58,8 +58,9 @@ it('should return "[object Symbol]" when called with Object.prototype.toString()
 	proclaim.equal(Object.prototype.toString.call(Symbol()), '[object Symbol]');
 });
 
-it('should retain browser toString behavior for nulls', function() {
+it('should retain browser toString behavior for nulls and window', function() {
 	proclaim.equal(Object.prototype.toString.call(null), '[object Null]');
+	proclaim.notEqual(window.toString(), '[object Null]');
 });
 
 if (supportsDescriptors) {

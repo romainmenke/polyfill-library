@@ -2,6 +2,7 @@
 // (C) Andrea Giammarchi - MIT Licensed
 
 (function (Object, GOPS, global) {
+	'use strict'; //so that ({}).toString.call(null) returns the correct [object Null] rather than [object Window]
 
 	var	setDescriptor;
 	var id = 0;
@@ -212,13 +213,25 @@
 	};
 	defineProperty(Object, 'create', descriptor);
 
-	descriptor.value = function () {
-		'use strict'; //so that ({}).toString.call(null) returns the correct [object Null] rather than [object Window]
-		var str = toString.call(this);
-		return (str === '[object String]' && onlySymbols(this)) ? '[object Symbol]' : str;
-	};
-	defineProperty(ObjectProto, 'toString', descriptor);
+	var strictModeUnsupported = (function(){ return this; }).call(null) !== null;
+	if(strictModeUnsupported) {
+		descriptor.value = toString;
+		defineProperty(window, 'toString', descriptor);
+		descriptor.value = function () {
+			if(this === window) {
+				return '[object Null]';
+			}
 
+			var str = toString.call(this);
+			return (str === '[object String]' && onlySymbols(this)) ? '[object Symbol]' : str;
+		};
+	} else {
+		descriptor.value = function () {
+			var str = toString.call(this);
+			return (str === '[object String]' && onlySymbols(this)) ? '[object Symbol]' : str;
+		};
+	}
+	defineProperty(ObjectProto, 'toString', descriptor);
 
 	setDescriptor = function (o, key, descriptor) {
 		var protoDescriptor = gOPD(ObjectProto, key);
