@@ -74,7 +74,7 @@ function createKarmaFileObject(filePattern) {
 
 module.exports = async function (config) {
 	if (!config.features) {
-		console.error('Missing the `--features` flag. `--features` needs to be set to the names of the features being tested. E.G. `npm run test-feature -- --features=Array.from,Array.prototype.forEach`');
+		console.error('Missing the `--features` flag. `--features` needs to be set to the names of the features being tested. E.G. `npm run test-polyfills -- --features=Array.from,Array.prototype.forEach`');
 		process.exit(1);
 	}
 
