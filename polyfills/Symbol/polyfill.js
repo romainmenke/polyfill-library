@@ -213,7 +213,7 @@
 	};
 	defineProperty(Object, 'create', descriptor);
 
-	var strictModeSupported = (function(){ return this; }).call(null) === null;
+	var strictModeSupported = (function(){ 'use strict'; return this; }).call(null) === null;
 	if (strictModeSupported) {
 		descriptor.value = function () {
 			var str = toString.call(this);
