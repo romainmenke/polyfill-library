@@ -220,8 +220,6 @@
 			return (str === '[object String]' && onlySymbols(this)) ? '[object Symbol]' : str;
 		};
 	} else {
-		descriptor.value = toString.bind(window);
-		defineProperty(window, 'toString', descriptor);
 		descriptor.value = function () {
 			// https://github.com/Financial-Times/polyfill-library/issues/164#issuecomment-486965300
 			// Polyfill.io this code is here for the situation where a browser does not
