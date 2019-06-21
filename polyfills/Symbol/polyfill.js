@@ -213,20 +213,28 @@
 	};
 	defineProperty(Object, 'create', descriptor);
 
-	var strictModeUnsupported = (function(){ return this; }).call(null) !== null;
-	if(strictModeUnsupported) {
-		descriptor.value = toString;
-		defineProperty(window, 'toString', descriptor);
+	var strictModeSupported = (function(){ return this; }).call(null) === null;
+	if (strictModeSupported) {
 		descriptor.value = function () {
-			if(this === window) {
-				return '[object Null]';
-			}
-
 			var str = toString.call(this);
 			return (str === '[object String]' && onlySymbols(this)) ? '[object Symbol]' : str;
 		};
 	} else {
+		descriptor.value = toString;
+		defineProperty(window, 'toString', descriptor);
 		descriptor.value = function () {
+			// https://github.com/Financial-Times/polyfill-library/issues/164#issuecomment-486965300
+			// Polyfill.io this code is here for the situation where a browser does not
+			// support strict mode and is executing `Object.prototype.toString.call(null)`.
+			// This code ensures that we return the correct result in that situation however,
+			// this code also introduces a bug where it will return the incorrect result for
+			// `Object.prototype.toString.call(window)`. We can't have the correct result for
+			// both `window` and `null`, so we have opted for `null` as we believe this is the more 
+			// common situation. 
+			if (this === window) {
+				return '[object Null]';
+			}
+
 			var str = toString.call(this);
 			return (str === '[object String]' && onlySymbols(this)) ? '[object Symbol]' : str;
 		};
