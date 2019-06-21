@@ -10,14 +10,6 @@ describe('AbortSignal', function () {
         proclaim.arity(AbortSignal, 0);
     });
 
-    it('has correct name', function () {
-        proclaim.hasName(AbortSignal, 'AbortSignal');
-    });
-
-    it('is not enumerable', function () {
-        proclaim.isNotEnumerable(window, 'AbortSignal');
-    });
-
     // Copied from https://github.com/mo/abortcontroller-polyfill/blob/master/tests/basic.test.js
     describe('basic tests', function () {
         it('Request object has .signal', function () {
@@ -198,12 +190,6 @@ describe('AbortSignal', function () {
                 done();
             };
             controller.abort();
-        });
-
-        it('toString() output', function () {
-            proclaim.deepStrictEqual(new AbortController().toString(), '[object AbortController]');
-            // proclaim.deepStrictEqual(Object.prototype.toString.call(new AbortController()), '[object AbortController]');
-            proclaim.deepStrictEqual(new AbortController().signal.toString(), '[object AbortSignal]');
         });
     });
 });
