@@ -29,5 +29,4 @@ firefox_mob = "* - 38"
 
 [install]
 module = "whatwg-fetch"
-postinstall = "update.task.js"
 
