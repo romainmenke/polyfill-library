@@ -63,14 +63,14 @@ if(strictModeSupported) {
 	it('Object.prototype.toString.call(window) should be [object Window]', function() {
 		proclaim.equal(Object.prototype.toString.call(window), '[object Window]');
 	});
+
+	it('window.toString() should be [object Window]', function() {
+		proclaim.equal(window.toString(), '[object Window]');
+	});
 }
 
 it('Object.prototype.toString.call(null) should be [object Null]', function() {
 	proclaim.equal(Object.prototype.toString.call(null), '[object Null]');
-});
-
-it('window.toString() should be [object Window]', function() {
-	proclaim.equal(window.toString(), '[object Window]');
 });
 
 if (supportsDescriptors) {
