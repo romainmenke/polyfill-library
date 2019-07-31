@@ -57,6 +57,15 @@ it('Returns target\'s own property keys', function () {
     proclaim.deepStrictEqual(Reflect.ownKeys({
         a: 1
     }), ['a']);
+
+    var obj = { a: 1 };
+    if ('Symbol' in this) {
+        var b = Symbol('b');
+        obj[b] = 2;
+        proclaim.deepStrictEqual(Reflect.ownKeys(obj), ['a', b]);
+    } else {
+        proclaim.deepStrictEqual(Reflect.ownKeys(obj), ['a']);
+    }
 });
 
 if ('create' in Object) {
