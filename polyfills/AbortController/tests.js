@@ -10,7 +10,7 @@ describe('AbortSignal', function () {
         proclaim.arity(AbortSignal, 0);
     });
 
-    // Copied from https://github.com/mo/abortcontroller-polyfill/blob/master/tests/basic.test.js
+    // Modified from https://github.com/mo/abortcontroller-polyfill/blob/master/tests/basic.test.js
     describe('basic tests', function () {
         it('Request object has .signal', function () {
             var controller = new AbortController();
@@ -23,11 +23,6 @@ describe('AbortSignal', function () {
         });
 
         it('abort during fetch', function (done) {
-            var timeout = setTimeout(function () {
-                done({
-                    name: 'fail'
-                });
-            }, 2000);
             var controller = new AbortController();
             var signal = controller.signal;
             setTimeout(function () {
@@ -39,17 +34,11 @@ describe('AbortSignal', function () {
                 proclaim.isUndefined('Abort during fetch failed.');
             }, function (err) {
                 proclaim.deepStrictEqual(err.name, 'AbortError');
-                clearTimeout(timeout);
                 done();
             });
         });
 
         it('abort during fetch when Request has signal', function (done) {
-            var timeout = setTimeout(function () {
-                done({
-                    name: 'fail'
-                });
-            }, 2000);
             var controller = new AbortController();
             var signal = controller.signal;
             setTimeout(function () {
@@ -62,17 +51,11 @@ describe('AbortSignal', function () {
                 proclaim.isUndefined('Abort during fetch failed.');
             }, function (err) {
                 proclaim.deepStrictEqual(err.name, 'AbortError');
-                clearTimeout(timeout);
                 done();
             });
         });
 
         it('abort before fetch started', function (done) {
-            var timeout = setTimeout(function () {
-                done({
-                    name: 'fail'
-                });
-            }, 2000);
             var controller = new AbortController();
             controller.abort();
             var signal = controller.signal;
@@ -82,89 +65,35 @@ describe('AbortSignal', function () {
                 proclaim.isUndefined('Abort during fetch failed.');
             }, function (err) {
                 proclaim.deepStrictEqual(err.name, 'AbortError');
-                clearTimeout(timeout);
                 done();
             });
         });
 
-        // it('abort before fetch started, verify no HTTP request is made', function() {
-        //   var server = http.createServer((req, res) => {
-        //     fail('fetch() made an HTTP request despite pre-aborted signal');
-        //   }).listen(0);
-        //   var boundListenPort = server.address().port;
-        //   browser.url(TESTPAGE_URL);
-        //   var err = browser.executeAsync(async (boundListenPort, done) => {
-        //     setTimeout(function() {
-        //       done({name: 'fail'});
-        //     }, 2000);
-        //     var controller = new AbortController();
-        //     controller.abort();
-        //     var signal = controller.signal;
-        //     try {
-        //       await fetch('http://127.0.0.1:${boundListenPort}', {signal: signal});
-        //       done({name: 'fail'});
-        //     } catch (err) {
-        //       done(err);
-        //     }
-        //   }, boundListenPort);
-        //   expect(err.name).toBe('AbortError');
-        //   server.close();
-        // });
-
         it('fetch without aborting', function (done) {
-            var timeout = setTimeout(function () {
-                done({
-                    name: 'fail'
-                });
-            }, 2000);
             var controller = new AbortController();
             var signal = controller.signal;
             fetch('https://httpstat.us/200?sleep=50', {
                 signal: signal
             }).then(function () {
-                clearTimeout(timeout);
-                done();
-            });
-        });
-
-        it('fetch without signal set', function (done) {
-            var timeout = setTimeout(function () {
-                done({
-                    name: 'fail'
-                });
-            }, 2000);
-            fetch('https://httpstat.us/200?sleep=50').then(function () {
-                clearTimeout(timeout);
                 done();
             });
         });
 
         it('event listener fires "abort" event', function (done) {
-            var timeout = setTimeout(function () {
-                done({
-                    name: 'fail'
-                });
-            }, 2000);
             var controller = new AbortController();
             controller.signal.addEventListener('abort', function () {
-                clearTimeout(timeout);
                 done();
             });
             controller.abort();
         });
 
         it('signal.aborted is true after abort', function (done) {
-            var timeout = setTimeout(function () {
-                done('FAIL');
-            }, 2000);
             var controller = new AbortController();
             controller.signal.addEventListener('abort', function () {
                 proclaim.isTrue(controller.signal.aborted);
-                clearTimeout(timeout);
                 done();
             });
             controller.abort();
-            proclaim.isTrue(controller.signal.aborted);
         });
 
         it('event listener doesn\'t fire "abort" event after removeEventListener', function (done) {
@@ -181,12 +110,8 @@ describe('AbortSignal', function () {
         });
 
         it('signal.onabort called on abort', function (done) {
-            var timeout = setTimeout(function () {
-                done('FAIL');
-            }, 200);
             var controller = new AbortController();
             controller.signal.onabort = function () {
-                clearTimeout(timeout);
                 done();
             };
             controller.abort();
