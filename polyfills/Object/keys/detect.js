@@ -5,6 +5,7 @@
 	try {
 		// In ES6 Object.keys works on all object except `null` and `undefined`.
 		Object.keys('');
+		Object.keys(1);
 		return true;
 	} catch (e) {
 		return false;
