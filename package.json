@@ -45,10 +45,12 @@
   },
   "dependencies": {
     "@financial-times/polyfill-useragent-normaliser": "^1.2.0",
+    "@formatjs/intl-pluralrules": "^1.1.1",
+    "@formatjs/intl-relativetimeformat": "^3.0.1",
     "@iarna/toml": "^2.2.3",
     "@webcomponents/template": "^1.4.0",
-    "abort-controller": "^2.0.2",
     "Base64": "^1.0.0",
+    "abort-controller": "^2.0.2",
     "audio-context-polyfill": "^1.0.0",
     "diff": "1.4.0",
     "event-source-polyfill": "^0.0.9",
