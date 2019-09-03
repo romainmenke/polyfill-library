@@ -19,9 +19,6 @@ ios_saf = "*"
 firefox_mob = "<58"
 samsung_mob = "*"
 
-[build]
-minify = false
-
 [install]
 module = "@formatjs/intl-pluralrules"
 paths = [ "dist/polyfill.js" ]
