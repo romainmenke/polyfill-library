@@ -1,4 +1,4 @@
-dependencies = [ ]
+dependencies = ["Intl"]
 license = "MIT"
 spec = "https://rawgit.com/caridy/intl-plural-rules-spec/master/index.html"
 repo = "https://github.com/formatjs/formatjs/blob/master/packages/intl-pluralrules/polyfill.js"
