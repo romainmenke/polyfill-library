@@ -1,6 +1,6 @@
 /* global Type, GetMethod, Call, OrdinaryToPrimitive */
 // 7.1.1. ToPrimitive ( input [ , PreferredType ] )
-function ToPrimitive(input /* [, PreferredType] */) { // eslint-disable-line no-unused-vars
+var ToPrimitive = (function(input /* [, PreferredType] */) { // eslint-disable-line no-unused-vars
 	var PreferredType = arguments.length > 1 ? arguments[1] : undefined;
 	// 1. Assert: input is an ECMAScript language value.
 	// 2. If Type(input) is Object, then
@@ -37,4 +37,4 @@ function ToPrimitive(input /* [, PreferredType] */) { // eslint-disable-line no-
 	}
 	// 3. Return input
 	return input;
-}
+}).bind(this);

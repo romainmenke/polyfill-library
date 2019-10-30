@@ -1,6 +1,6 @@
 /* global Type, Get, ToBoolean */
 // 7.2.8. IsRegExp ( argument )
-function IsRegExp(argument) { // eslint-disable-line no-unused-vars
+var IsRegExp = (function(argument) { // eslint-disable-line no-unused-vars
 	// 1. If Type(argument) is not Object, return false.
 	if (Type(argument) !== 'object') {
 		return false;
@@ -22,4 +22,4 @@ function IsRegExp(argument) { // eslint-disable-line no-unused-vars
 	}
 	// 5. Return false.
 	return false;
-}
+}).bind(this);

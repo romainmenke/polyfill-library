@@ -1,6 +1,6 @@
 /* global IsArray, ArrayCreate, Get, Type, IsConstructor, Construct */
 // 9.4.2.3. ArraySpeciesCreate ( originalArray, length )
-function ArraySpeciesCreate(originalArray, length) { // eslint-disable-line no-unused-vars
+var ArraySpeciesCreate = (function (originalArray, length) { // eslint-disable-line no-unused-vars
 	// 1. Assert: length is an integer Number ≥ 0.
 	// 2. If length is -0, set length to +0.
 	if (1/length === -Infinity) {
@@ -45,4 +45,4 @@ function ArraySpeciesCreate(originalArray, length) { // eslint-disable-line no-u
 	}
 	// 10. Return ? Construct(C, « length »).
 	return Construct(C, [length]);
-}
+}).bind(this);
