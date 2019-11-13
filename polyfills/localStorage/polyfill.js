@@ -97,4 +97,4 @@
 
 		global.attachEvent('onunload', updateKeys);
 	}
-}(this));
+}(self));

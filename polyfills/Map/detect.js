@@ -1,4 +1,4 @@
-'Map' in this && (function(self) {
+'Map' in self && (function(self) {
 	try {
 		var m = new Map([[1, 1], [2, 2]]);
 		if (Map.length === 0) {
@@ -12,4 +12,4 @@
 	} catch (e) {
 		return false;
 	}
-}(this))
+}(self))

@@ -77,4 +77,4 @@ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH RE
 	addProp(global.HTMLLinkElement, "relList", "rel");
 	addProp(global.HTMLAnchorElement, "relList", "rel");
 	addProp(global.HTMLAreaElement, "relList", "rel");
-}(this));
+}(self));

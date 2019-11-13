@@ -33,7 +33,7 @@ var propertyDescriptorsSupported = (function () {
 it('works as expected', function () {
 	var getOwnPropertyDescriptor, O, s, descs;
 	getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
-	if ('create' in Object && 'Symbol' in this) {
+	if ('create' in Object && 'Symbol' in self) {
 		O = Object.create({
 			q: 1
 		}, {

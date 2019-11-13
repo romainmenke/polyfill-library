@@ -37,6 +37,6 @@ Object.defineProperty(Symbol.prototype, 'description', {
         }
         return sym;
     }
-    this.Symbol = Symbol;
+    self.Symbol = Symbol;
     Symbol.prototype = NativeSymbol.prototype;
 }());

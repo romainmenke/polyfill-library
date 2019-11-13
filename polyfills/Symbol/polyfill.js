@@ -248,4 +248,4 @@
 		}
 	};
 
-}(Object, 'getOwnPropertySymbols', this));
+}(Object, 'getOwnPropertySymbols', self));

@@ -34,7 +34,7 @@ it('throws a TypeError if target is not an Object',function(){
         Reflect.getOwnPropertyDescriptor('', 'a');
     }, TypeError);
       
-    if('Symbol' in this) {
+    if('Symbol' in self) {
         proclaim.throws(function() {
             Reflect.getOwnPropertyDescriptor(Symbol(), 'a');
         }, TypeError);

@@ -488,4 +488,4 @@
 		global['Set'] = Set;
 	}
 
-}(this));
+}(self));

@@ -847,7 +847,7 @@ describe("polyfillio", function () {
 			s.on('end', () => {
 				const bundle = buf.join('');
 				assert.include(bundle, 'Polyfill service');
-				assert.include(bundle, "function(undefined)");
+				assert.include(bundle, "function(self, undefined)");
 				done();
 			});
 		});

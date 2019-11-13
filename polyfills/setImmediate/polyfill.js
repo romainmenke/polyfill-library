@@ -172,4 +172,4 @@
 
     attachTo.setImmediate = setImmediatePolyfill;
     attachTo.clearImmediate = clearImmediate;
-}(this)); // eslint-disable-line no-undef
+}(self)); // eslint-disable-line no-undef

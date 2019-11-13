@@ -243,4 +243,4 @@
 		return object.__proto__;
 	};
 	view.Blob.prototype = getPrototypeOf(new view.Blob());
-}(typeof self !== "undefined" && self || typeof window !== "undefined" && window || this));
+}(self));
