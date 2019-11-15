@@ -12,7 +12,7 @@ const polyfillsWhichHaveTests = globby.sync(['polyfills/**/tests.js', '!polyfill
     transform: (entry) => entry.replace('polyfills/', '').replace('/tests.js', '').replace(/\//g, '.')
 });
 
-_.chunk(polyfillsWhichHaveTests, 1).map(polyfillsWhichHaveTests => {
+_.chunk(polyfillsWhichHaveTests, 3).map(polyfillsWhichHaveTests => {
     const testCommands = polyfillsWhichHaveTests.map(feature => {
         return {
             run: {
