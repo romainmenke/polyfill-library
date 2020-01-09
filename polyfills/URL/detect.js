@@ -12,7 +12,7 @@
 		var nativeURL = new global.URL('http://example.com');
 
 		if ('href' in nativeURL && 'searchParams' in nativeURL) {
-			var url = new URL('http://example.com');
+			var url = new global.URL('http://example.com');
 			url.search = 'a=1&b=2';
 			if (url.href === 'http://example.com/?a=1&b=2') {
 				url.search = '';
@@ -20,7 +20,17 @@
 					var sp1 = new global.URLSearchParams('a=1');
 					var sp2 = new global.URLSearchParams(sp1);
 					if (String(sp2) === 'a=1') {
-						return true;
+						if (new global.URL('http://тест').host === 'xn--e1aybc') {
+							if (new global.URL('http://a#б').hash === '#%D0%B1') {
+								if (new global.URL('https://a@b').username === 'a') {
+									if (new global.URLSearchParams('a=1')[Symbol.iterator]) {
+										if (new global.URLSearchParams('a=1').get('a') === '1') {
+											return true;
+										}
+									}
+								}
+							}
+						}
 					}
 				}
 			}
