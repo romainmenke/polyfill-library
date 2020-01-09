@@ -1,1 +1,1 @@
-'forEach' in NodeList.prototype
+'forEach' in NodeList.prototype && 'forEach' in Array.prototype && NodeList.prototype.forEach === Array.prototype.forEach
