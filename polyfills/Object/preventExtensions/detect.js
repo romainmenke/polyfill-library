@@ -1,1 +1,1 @@
-'preventExtensions' in Object
+'preventExtensions' in Object && Object.preventExtensions(true)
