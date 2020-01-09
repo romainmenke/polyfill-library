@@ -15,4 +15,4 @@
 	} catch (err) {
 		return false;
 	}
-}())
+}()) && Array.prototype[Symbol.unscopables].copyWithin
