@@ -1,1 +1,1 @@
-'hypot' in Math
+'hypot' in Math && Math.hypot(Infinity, NaN) === Infinity

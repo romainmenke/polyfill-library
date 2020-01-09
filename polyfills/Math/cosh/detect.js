@@ -1,1 +1,1 @@
-'cosh' in Math
+'cosh' in Math && Math.cosh(710) !== Infinity
