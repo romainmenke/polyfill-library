@@ -18,14 +18,14 @@ it('is not enumerable', function () {
 });
 
 it('returns a new instance of `this` if the `items` argument does not have an iterator', function() {
-	function E(){};
+	function E(){}
 	proclaim.isInstanceOf(Array.from.bind(E)({length: 9}), E);
 });
 
 it('passes length value to the constructor', function() {
 	function E(){
 		this.args = arguments;
-	};
+	}
 	proclaim.deepStrictEqual(Array.from.bind(E)({length: 9}).args[0], 9);
 });
 

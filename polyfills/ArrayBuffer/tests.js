@@ -19,7 +19,7 @@ describe('constructor', function () {
     });
 
     it('throws RangeError when constructed with a negative length', function () {
-        proclaim.throws(function () {
+        proclaim["throws"](function () {
             new ArrayBuffer(-1);
         }, RangeError);
     });
@@ -107,42 +107,52 @@ describe('ArrayBuffer.isView', function () {
     });
 
     it('returns true when given Int8Array as argument', function () {
+        // eslint-disable-next-line no-undef
         proclaim.isTrue(ArrayBuffer.isView(new Int8Array));
     });
 
     it('returns true when given Uint8Array as argument', function () {
+        // eslint-disable-next-line no-undef
         proclaim.isTrue(ArrayBuffer.isView(new Uint8Array));
     });
 
     it('returns true when given Uint8ClampedArray as argument', function () {
+        // eslint-disable-next-line no-undef
         proclaim.isTrue(ArrayBuffer.isView(new Uint8ClampedArray));
     });
 
     it('returns true when given Int16Array as argument', function () {
+        // eslint-disable-next-line no-undef
         proclaim.isTrue(ArrayBuffer.isView(new Int16Array));
     });
 
     it('returns true when given Uint16Array as argument', function () {
+        // eslint-disable-next-line no-undef
         proclaim.isTrue(ArrayBuffer.isView(new Uint16Array));
     });
 
     it('returns true when given Int32Array as argument', function () {
+        // eslint-disable-next-line no-undef
         proclaim.isTrue(ArrayBuffer.isView(new Int32Array));
     });
 
     it('returns true when given Uint32Array as argument', function () {
+        // eslint-disable-next-line no-undef
         proclaim.isTrue(ArrayBuffer.isView(new Uint32Array));
     });
 
     it('returns true when given Float32Array as argument', function () {
+        // eslint-disable-next-line no-undef
         proclaim.isTrue(ArrayBuffer.isView(new Float32Array));
     });
 
     it('returns true when given Float64Array as argument', function () {
+        // eslint-disable-next-line no-undef
         proclaim.isTrue(ArrayBuffer.isView(new Float64Array));
     });
 
     it('returns true when given DataView as argument', function () {
+        // eslint-disable-next-line no-undef
         proclaim.isTrue(ArrayBuffer.isView(new DataView(new ArrayBuffer)));
     });
 });
@@ -165,43 +175,43 @@ describe('ArrayBuffer.prototype.slice', function () {
     });
 
     it('throws TypeError if `this` does not have an [[ArrayBufferData]] internal slot', function () {
-        proclaim.throws(function () {
+        proclaim["throws"](function () {
             ArrayBuffer.prototype.slice.call({});
         }, TypeError);
 
-        proclaim.throws(function () {
+        proclaim["throws"](function () {
             ArrayBuffer.prototype.slice.call([]);
         }, TypeError);
     });
 
     it('throws a TypeError if `this` is a SharedArrayBuffer', function () {
-        proclaim.throws(function () {
+        proclaim["throws"](function () {
             ArrayBuffer.prototype.slice.call(new SharedArrayBuffer(0));
         }, TypeError);
     });
 
     it('throws TypeError if `this` is not an Object', function () {
-        proclaim.throws(function () {
+        proclaim["throws"](function () {
             ArrayBuffer.prototype.slice.call(undefined);
         }, TypeError);
 
-        proclaim.throws(function () {
+        proclaim["throws"](function () {
             ArrayBuffer.prototype.slice.call(null);
         }, TypeError);
 
-        proclaim.throws(function () {
+        proclaim["throws"](function () {
             ArrayBuffer.prototype.slice.call(true);
         }, TypeError);
 
-        proclaim.throws(function () {
+        proclaim["throws"](function () {
             ArrayBuffer.prototype.slice.call("");
         }, TypeError);
 
-        proclaim.throws(function () {
+        proclaim["throws"](function () {
             ArrayBuffer.prototype.slice.call(Symbol());
         }, TypeError);
 
-        proclaim.throws(function () {
+        proclaim["throws"](function () {
             ArrayBuffer.prototype.slice.call(1);
         }, TypeError);
     });
@@ -247,7 +257,7 @@ describe('ArrayBuffer.prototype.slice', function () {
     });
 
     it('throws a TypeError if called with `new`', function () {
-        proclaim.throws(function () {
+        proclaim["throws"](function () {
             new Array.prototype.slice();
         });
     });
@@ -257,31 +267,31 @@ describe('ArrayBuffer.prototype.slice', function () {
     });
 
     it('throws TypeError if `constructor` property is not an object', function () {
-        proclaim.throws(function () {
+        proclaim["throws"](function () {
             var a = new ArrayBuffer();
             a.constructor = null;
             a.slice();
         }, TypeError);
 
-        proclaim.throws(function () {
+        proclaim["throws"](function () {
             var a = new ArrayBuffer();
             a.constructor = true;
             a.slice();
         }, TypeError);
 
-        proclaim.throws(function () {
+        proclaim["throws"](function () {
             var a = new ArrayBuffer();
             a.constructor = "";
             a.slice();
         }, TypeError);
 
-        proclaim.throws(function () {
+        proclaim["throws"](function () {
             var a = new ArrayBuffer();
             a.constructor = 1;
             a.slice();
         }, TypeError);
 
-        proclaim.throws(function () {
+        proclaim["throws"](function () {
             var a = new ArrayBuffer();
             a.constructor = Symbol();
             a.slice();
@@ -299,14 +309,14 @@ describe('ArrayBuffer.prototype.slice', function () {
         speciesConstructor[Symbol.species] = {};
         var arrayBuffer = new ArrayBuffer();
         arrayBuffer.constructor = speciesConstructor;
-        proclaim.throws(function () {
+        proclaim["throws"](function () {
             arrayBuffer.slice();
         }, TypeError);
     });
 
     it('throws a TypeError if species constructor is not an object', function () {
 
-        proclaim.throws(function () {
+        proclaim["throws"](function () {
             var speciesConstructor = {};
             speciesConstructor[Symbol.species] = true;
             var arrayBuffer = new ArrayBuffer();
@@ -314,7 +324,7 @@ describe('ArrayBuffer.prototype.slice', function () {
             arrayBuffer.slice();
         }, TypeError);
 
-        proclaim.throws(function () {
+        proclaim["throws"](function () {
             var speciesConstructor = {};
             speciesConstructor[Symbol.species] = "";
             var arrayBuffer = new ArrayBuffer();
@@ -322,7 +332,7 @@ describe('ArrayBuffer.prototype.slice', function () {
             arrayBuffer.slice();
         }, TypeError);
 
-        proclaim.throws(function () {
+        proclaim["throws"](function () {
             var speciesConstructor = {};
             speciesConstructor[Symbol.species] = Symbol();
             var arrayBuffer = new ArrayBuffer();
@@ -330,7 +340,7 @@ describe('ArrayBuffer.prototype.slice', function () {
             arrayBuffer.slice();
         }, TypeError);
 
-        proclaim.throws(function () {
+        proclaim["throws"](function () {
             var speciesConstructor = {};
             speciesConstructor[Symbol.species] = 1;
             var arrayBuffer = new ArrayBuffer();
@@ -374,7 +384,7 @@ describe('ArrayBuffer.prototype.slice', function () {
     });
 
     it('throws a TypeError if new ArrayBuffer is too small', function () {
-        proclaim.throws(function () {
+        proclaim["throws"](function () {
             var arrayBuffer = new ArrayBuffer(9);
             arrayBuffer.constructor = {};
             arrayBuffer.constructor[Symbol.species] = function () {
@@ -385,7 +395,7 @@ describe('ArrayBuffer.prototype.slice', function () {
     });
 
     it('throws a TypeError if species constructor returns `this` value', function () {
-        proclaim.throws(function () {
+        proclaim["throws"](function () {
             var arrayBuffer = new ArrayBuffer(9);
             arrayBuffer.constructor = {};
             arrayBuffer.constructor[Symbol.species] = function () {
@@ -396,7 +406,7 @@ describe('ArrayBuffer.prototype.slice', function () {
     });
 
     it('throws a TypeError if new object is not an ArrayBuffer instance', function () {
-        proclaim.throws(function () {
+        proclaim["throws"](function () {
             var arrayBuffer = new ArrayBuffer(9);
             arrayBuffer.constructor = {};
             arrayBuffer.constructor[Symbol.species] = function () {
@@ -419,7 +429,7 @@ describe('ArrayBuffer.prototype.slice', function () {
 
 describe('ArrayBuffer.prototype.byteLength', function () {
     it('throws a TypeError if called by something without an [[ArrayBufferData]] internal slot', function () {
-        proclaim.throws(function () {
+        proclaim["throws"](function () {
             ArrayBuffer.prototype.byteLength;
         }, TypeError);
     });
