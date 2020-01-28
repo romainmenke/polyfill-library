@@ -1,24 +1,31 @@
 "use strict";
 
-const polyfillTestServer = require('./polyfill-test-server');
+const polyfillTestServer = require("./polyfill-test-server");
 const browserstackRunner = require("browserstack-runner");
 const browserstack = require("browserstack-local");
+
+if (!process.env.BROWSERSTACK_USERNAME || !process.env.BROWSERSTACK_ACCESS_KEY) {
+  console.error('To run tests on BrowserStack you need to set the environment variables BROWSERSTACK_USERNAME and BROWSERSTACK_ACCESS_KEY')
+}
+
+const username = process.env.BROWSERSTACK_USERNAME;
+const key = process.env.BROWSERSTACK_ACCESS_KEY;
+
+const browserstackLocal = new browserstack.Local();
+const browserstackLocalConfig = {
+  key,
+  verbose: "true",
+  force: "true",
+  onlyAutomate: "true",
+  forceLocal: "true"
+};
 
 polyfillTestServer.listen(9876, () => {
   console.log("Polyfill test server listening on port 9876");
 
-
-  const bs_local = new browserstack.Local();
-  const bs_local_args = {
-    key: "pbqBnRDzKFSqDz8fmYzy",
-    verbose: "true",
-    force: "true",
-    onlyAutomate: "true",
-    forceLocal: "true"
-  };
   const config = {
-    username: "jakechampion2",
-    key: "pbqBnRDzKFSqDz8fmYzy",
+    username,
+    key,
     test_path: ["?features=Array.from&includePolyfill"],
     test_server: "http://localhost:9876",
     test_framework: "mocha",
@@ -36,19 +43,17 @@ polyfillTestServer.listen(9876, () => {
   };
 
   // starts the Local instance with the required arguments
-  bs_local.start(bs_local_args, function() {
+  browserstackLocal.start(browserstackLocalConfig, function() {
     console.log("Started BrowserStackLocal");
     browserstackRunner.run(config, function(error, report) {
       if (error) {
-        bs_local.stop(function() {
-          console.log("Stopped BrowserStackLocal");
-        });
         console.log("Error:" + error);
-        //   return;
+        process.exitCode = 1;
+      } else {
+        console.log(JSON.stringify(report, null, 2));
+        console.log("Test Finished");
       }
-      console.log(JSON.stringify(report, null, 2));
-      console.log("Test Finished");
-      bs_local.stop(function() {
+      browserstackLocal.stop(function() {
         console.log("Stopped BrowserStackLocal");
       });
     });
