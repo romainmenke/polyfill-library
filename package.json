@@ -84,6 +84,8 @@
     "@iarna/toml": "^2.2.3",
     "array.prototype.flatmap": "^1.2.1",
     "browserstack": "1.5.3",
+    "browserstack-local": "^1.4.5",
+    "browserstack-runner": "^0.9.0",
     "dotenv": "^8.2.0",
     "eslint": "^6.8.0",
     "execa": "^4.0.0",
