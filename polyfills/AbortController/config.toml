@@ -1,4 +1,5 @@
 dependencies = [
+  "console.assert",
   "fetch",
   "Object.defineProperty",
   "Object.getOwnPropertyDescriptor",
