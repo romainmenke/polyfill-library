@@ -1,6 +1,7 @@
 /* global CreateMethodProperty, Reflect, Type, ToPropertyKey, ToPropertyDescriptor */
 // 26.1.3 Reflect.defineProperty ( target, propertyKey, attributes )
 CreateMethodProperty(Reflect, 'defineProperty', function defineProperty(target, propertyKey, attributes ) {
+    "use strict";
     // 1. If Type(target) is not Object, throw a TypeError exception.
     if (Type(target) !== "object") {
         throw new TypeError(Object.prototype.toString.call(target) + ' is not an Object');
