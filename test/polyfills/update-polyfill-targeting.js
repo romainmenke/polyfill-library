@@ -5,7 +5,7 @@ const path = require("path");
 const semver = require("semver");
 const inquirer = require("inquirer");
 const polyfillLibrary = require("../../lib/index");
-
+const TOML = require("@iarna/toml");
 async function main() {
 	const file = path.join(__dirname, "./compat.json");
 	// Ensure file exists before proceeding.
@@ -93,15 +93,16 @@ async function main() {
 	}
 
 	async function updateFeature(feature, update) {
-		let configPath = path.join(__dirname, "../../polyfills", feature.join("/"), "config.json");
+		let configPath = path.join(__dirname, "../../polyfills", feature.join("/"), "config.toml");
 		const fileExists = fs.existsSync(configPath);
 		if (!fileExists) {
-			configPath = path.join(__dirname, "../../polyfills", feature.join("."), "config.json");
+			configPath = path.join(__dirname, "../../polyfills", feature.join("."), "config.toml");
 		}
-		const config = await fs.readJSON(configPath);
+		const config = TOML.parse(await fs.readFile(configPath, 'utf-8'));
 		config.browsers = config.browsers || {};
 		config.browsers = Object.assign(config.browsers, JSON.parse(update));
-		await fs.outputJSON(configPath, config, { spaces: 2 });
+        // await fs.outputJSON(configPath, config, { spaces: 2 });
+        await fs.writeFile(configPath, TOML.stringify(config), 'utf-8');
 	}
 	if (questions.length > 0) {
 		const answers = await inquirer.prompt(questions);

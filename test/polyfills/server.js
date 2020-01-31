@@ -44,9 +44,11 @@ app.get("/proclaim.js", (request, response) => {
   response.sendfile(require.resolve("proclaim/lib/proclaim.js"), "utf-8");
 });
 
-app.get("/polyfill.js", (request, response) => {
+app.get("/polyfill.js", async (request, response) => {
+  const polyfillsWithTests = await testablePolyfills();
+  const features = polyfillsWithTests.map(polyfill => polyfill.feature);
   const params = {
-    features: createPolyfillLibraryConfigFor("all"),
+    features: createPolyfillLibraryConfigFor(features.join(',')),
     minify: false,
     stream: true,
     uaString: "other/0.0.0"
@@ -124,8 +126,10 @@ function createEndpoint(template) {
 
     let beforeTestSuite = "";
     if (includePolyfills !== "no") {
+      const polyfillsWithTests = await testablePolyfills();
+      const features = polyfillsWithTests.map(polyfill => polyfill.feature);
       const params = {
-        features: createPolyfillLibraryConfigFor(feature || "all"),
+        features: createPolyfillLibraryConfigFor(features.join(',')),
         minify: false,
         stream: false,
         uaString: "other/0.0.0"

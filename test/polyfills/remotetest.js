@@ -6,7 +6,6 @@ Promise.config({
   longStackTraces: true
 });
 
-const wait = duration => new Promise(resolve => setTimeout(resolve, duration));
 // By default, promises fail silently if you don't attach a .catch() handler to them.
 //This tool keeps track of unhandled rejections globally. If any remain unhandled at the end of your process, it logs them to STDERR and exits with code 1.
 const hardRejection = require("hard-rejection");
@@ -64,9 +63,8 @@ const testResultsFile = path.join(__dirname, "results.json");
 const testResults = {};
 const pollTick = 100;
 const testBrowserTimeout = 120000;
-const mode = "control";
-// const mode = ["all", "targeted", "control"].filter(x => x in argv)[0] || "all";
-const url = "http://localhost:9876/test?includePolyfills=no";
+const mode = ["all", "control"].filter(x => process.argv.includes(x))[0] || "all";
+const url = "http://localhost:9876/test?includePolyfills=" + (mode === "all" ? "yes" : "no");
 const tunnelId =
   "build:" +
   (process.env.CIRCLE_BUILD_NUM || process.env.NODE_ENV || "null") +
@@ -188,13 +186,10 @@ const printProgress = (function() {
               }
               resolvedCount++;
               if (results.length < jobs.length) {
-                console.log(1111111111)
                 pushJob();
               } else if (resolvedCount === jobs.length) {
-                console.log(2222222222)
                 resolve();
               }
-              console.log(3333333333)
               return job;
             })
             .catch(e => {
