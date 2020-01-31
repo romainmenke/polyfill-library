@@ -1,6 +1,6 @@
 "use strict";
 
-const wd = require("wd");
+const { remote } = require('webdriverio');
 const wait = duration => new Promise(resolve => setTimeout(resolve, duration));
 
 if (
@@ -14,18 +14,7 @@ if (
 
 module.exports = class TestJob {
   constructor(name, url, mode, capability, sessionName, testBrowserTimeout, pollTick) {
-	  this.name = name;
-    this.browser = wd.promiseRemote(
-      "hub-cloud.browserstack.com",
-      80,
-      process.env.BROWSERSTACK_USERNAME,
-      process.env.BROWSERSTACK_ACCESS_KEY
-    );
-    this.browser.configureHttp({
-      timeout: 180000,
-      retries: 3,
-      retryDelay: 100
-    });
+    this.name = name;
     this.mode = mode;
     this.url = url;
     this.results = null;
@@ -48,56 +37,69 @@ module.exports = class TestJob {
     this.setState("ready");
   }
 
-  pollForResults() {
-    return this.browser
-      .safeEval("window.global_test_results || window.global_test_progress")
-      .then(browserdata => {
-        if (browserdata && browserdata.state === "complete") {
-          this.browser.quit();
-          this.results = browserdata;
-          this.duration = Math.floor((Date.now() - this.startTime) / 1000);
-          this.setState("complete");
-          return this;
-        } else if (
-          this.lastUpdateTime &&
-          this.lastUpdateTime < Date.now() - this.testBrowserTimeout
-        ) {
-          throw new Error(`Timed out at "${this.state}" on "${this.name}"`);
-        } else {
-          if (browserdata && browserdata.state === "running") {
-            if (
-              !this.results ||
-              browserdata.runnerCompletedCount >
-                this.results.runnerCompletedCount
-            ) {
-              this.results = browserdata;
-              this.lastUpdateTime = Date.now();
-            }
-            this.setState("running");
+  async pollForResults() {
+    const browserdata = await this.browser
+      .execute(
+        "var args = Array.prototype.slice.call(arguments, 0);var code = args[0], fargs = args[1];var wrap = function() { return eval(code);};return wrap.apply(this, fargs);"
+        , "window.global_test_results || window.global_test_progress;");
+      if (browserdata && browserdata.state === "complete") {
+        this.browser.deleteSession();
+        this.results = browserdata;
+        this.duration = Math.floor((Date.now() - this.startTime) / 1000);
+        this.setState("complete");
+        return this;
+      } else if (
+        this.lastUpdateTime &&
+        this.lastUpdateTime < Date.now() - this.testBrowserTimeout
+      ) {
+        throw new Error(`Timed out at "${this.state}" on "${this.name}"`);
+      } else {
+        if (browserdata && browserdata.state === "running") {
+          if (
+            !this.results ||
+            browserdata.runnerCompletedCount >
+              this.results.runnerCompletedCount
+          ) {
+            this.results = browserdata;
+            this.lastUpdateTime = Date.now();
           }
-
-          // Recurse
-          return wait(this.pollTick).then(() => this.pollForResults());
+          this.setState("running");
         }
-      });
+
+        // Recurse
+        return wait(this.pollTick).then(() => this.pollForResults());
+      }
   }
 
   async run() {
+    this.browser = await remote({
+      maxInstances: 1,
+      logLevel: 'warn',
+      capabilities: this.capabilities,
+      services: ['browserstack'],
+      user: process.env.BROWSERSTACK_USERNAME,
+      key: process.env.BROWSERSTACK_ACCESS_KEY,
+      browserstackLocal: true,
+    });
     this.lastUpdateTime = 0;
     this.setState("initialising browser");
     this.startTime = Date.now();
 
     try {
-      await this.browser.init(this.capabilities);
+      // this.browser.capabilities = this.capabilities;
+      console.log('started');
       await this.setState("started");
-      await this.browser.get(this.url);
+      await this.browser.navigateTo(this.url);
+      console.log('navigate to', this.url);
       await this.setState("loaded URL");
       await wait(this.pollTick);
+      console.log('polling');
       await this.setState("polling for results");
       await this.pollForResults();
       return this;
     } catch (e) {
-      await this.browser.quit();
+      console.log({e})
+      await this.browser.closeWindow();
       this.results = e;
       this.setState("error");
       throw e;

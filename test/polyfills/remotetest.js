@@ -13,7 +13,7 @@ const hardRejection = require("hard-rejection");
 // Install the unhandledRejection listeners
 hardRejection();
 
-const promisify = require('util').promisify;
+const promisify = require("util").promisify;
 const path = require("path");
 const fs = require("fs-extra");
 const cli = require("cli-color");
@@ -38,29 +38,26 @@ const browsers = browserlist.filter(
 
 const useragentToBrowserObj = browserWithVersion => {
   const [browser, version] = browserWithVersion.split("/");
-  const browserObj = browserstacklist.find(browserObject => {
-    if (
-      browser === browserObject.os &&
-      version === browserObject.os_version
-    ) {
-      return true;
+  for (const browserObject of browserstacklist) {
+    if (browser === browserObject.os && version === browserObject.os_version) {
+      return {
+        deviceName: browserObject.device,
+        platformName: browserObject.os,
+        platformVersion: browserObject.os_version
+      };
     } else if (
       browser === browserObject.browser &&
       version === browserObject.browser_version
     ) {
-      return true;
-    } else {
-      return false;
+      return {
+        browserName: browserObject.browser,
+        browserVersion: browserObject.browser_version
+      };
     }
-  });
-
-  if (browserObj) {
-    return browserObj;
-  } else {
-    throw new Error(
-      `Browser: ${browser} with version ${version} was not found on BrowserStack.`
-    );
   }
+  throw new Error(
+    `Browser: ${browser} with version ${version} was not found on BrowserStack.`
+  );
 };
 
 const testResultsFile = path.join(__dirname, "results.json");
@@ -75,19 +72,18 @@ const tunnelId =
   (process.env.CIRCLE_BUILD_NUM || process.env.NODE_ENV || "null") +
   "_" +
   new Date().toISOString();
-const jobs = browsers.map(
-  browser =>{
-    const capability = useragentToBrowserObj(browser);
-    return new TestJob(
-      browser,
-      url,
-      mode,
-      capability,
-      tunnelId,
-      testBrowserTimeout,
-      pollTick
-    );
-  });
+const jobs = browsers.map(browser => {
+  const capability = useragentToBrowserObj(browser);
+  return new TestJob(
+    browser,
+    url,
+    mode,
+    capability,
+    tunnelId,
+    testBrowserTimeout,
+    pollTick
+  );
+});
 const tunnel = new Tunnel();
 
 const openTunnel = promisify(tunnel.start.bind(tunnel));
@@ -165,13 +161,12 @@ const printProgress = (function() {
 
 (async function() {
   try {
-    await openTunnel(
-      {
-        verbose: "true",
-        force: "true",
-        onlyAutomate: "true",
-        forceLocal: "true"
-      });
+    await openTunnel({
+      verbose: "true",
+      force: "true",
+      onlyAutomate: "true",
+      forceLocal: "true"
+    });
     const cliFeedbackTimer = setInterval(() => printProgress(jobs), pollTick);
     // Run jobs within concurrency limits
     await new Promise((resolve, reject) => {
@@ -193,37 +188,18 @@ const printProgress = (function() {
               }
               resolvedCount++;
               if (results.length < jobs.length) {
+                console.log(1111111111)
                 pushJob();
               } else if (resolvedCount === jobs.length) {
+                console.log(2222222222)
                 resolve();
               }
+              console.log(3333333333)
               return job;
             })
-            .catch(async e => {
+            .catch(e => {
               console.log(e.stack || e);
-              await wait(30 * 1000);
-              return job.run()
-              .then(job => {
-                if (job.state === "complete") {
-                  const [family, version] = job.name.split("/");
-                  _.set(
-                    testResults,
-                    [family, version, job.mode],
-                    job.getResultSummary()
-                  );
-                }
-                resolvedCount++;
-                if (results.length < jobs.length) {
-                  pushJob();
-                } else if (resolvedCount === jobs.length) {
-                  resolve();
-                }
-                return job;
-              })
-              .catch(e => {
-                console.log(e.stack || e);
-                reject(e);
-              });
+              reject(e);
             })
         );
       }
