@@ -6,28 +6,62 @@ Promise.config({
   longStackTraces: true
 });
 
+const wait = duration => new Promise(resolve => setTimeout(resolve, duration));
 // By default, promises fail silently if you don't attach a .catch() handler to them.
 //This tool keeps track of unhandled rejections globally. If any remain unhandled at the end of your process, it logs them to STDERR and exits with code 1.
 const hardRejection = require("hard-rejection");
 // Install the unhandledRejection listeners
 hardRejection();
 
+const promisify = require('util').promisify;
 const path = require("path");
 const fs = require("fs-extra");
 const cli = require("cli-color");
 const _ = require("lodash");
-const browserstack = require("./browserstack");
 const normalizeUserAgent = require("../../lib/index").normalizeUserAgent;
 const TestJob = require("./test-job");
+const Tunnel = require("browserstack-local").Local;
 
 // Grab all the browsers from BrowserStack which are officially supported by the polyfil service.
 const TOML = require("@iarna/toml");
 const browserlist = TOML.parse(
   fs.readFileSync(path.join(__dirname, "./browsers.toml"), "utf-8")
 ).browsers;
+
+const browserstacklist = TOML.parse(
+  fs.readFileSync(path.join(__dirname, "./browserstackBrowsers.toml"), "utf-8")
+).browsers;
+
 const browsers = browserlist.filter(
   uaString => normalizeUserAgent(uaString) !== "other/0.0.0"
 );
+
+const useragentToBrowserObj = browserWithVersion => {
+  const [browser, version] = browserWithVersion.split("/");
+  const browserObj = browserstacklist.find(browserObject => {
+    if (
+      browser === browserObject.os &&
+      version === browserObject.os_version
+    ) {
+      return true;
+    } else if (
+      browser === browserObject.browser &&
+      version === browserObject.browser_version
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+
+  if (browserObj) {
+    return browserObj;
+  } else {
+    throw new Error(
+      `Browser: ${browser} with version ${version} was not found on BrowserStack.`
+    );
+  }
+};
 
 const testResultsFile = path.join(__dirname, "results.json");
 const testResults = {};
@@ -35,27 +69,29 @@ const pollTick = 100;
 const testBrowserTimeout = 120000;
 const mode = "control";
 // const mode = ["all", "targeted", "control"].filter(x => x in argv)[0] || "all";
-const url = "http://localhost:8080/?mode=" + mode;
+const url = "http://localhost:9876/test?includePolyfills=no";
 const tunnelId =
   "build:" +
   (process.env.CIRCLE_BUILD_NUM || process.env.NODE_ENV || "null") +
   "_" +
   new Date().toISOString();
 const jobs = browsers.map(
-  browser =>
-    new TestJob(
+  browser =>{
+    const capability = useragentToBrowserObj(browser);
+    return new TestJob(
+      browser,
       url,
       mode,
-      browser,
+      capability,
       tunnelId,
-      browserstack.creds,
       testBrowserTimeout,
-      pollTick,
-      browserstack,
-      true
-    )
-);
-const tunnel = browserstack.tunnel(true);
+      pollTick
+    );
+  });
+const tunnel = new Tunnel();
+
+const openTunnel = promisify(tunnel.start.bind(tunnel));
+const closeTunnel = promisify(tunnel.stop.bind(tunnel));
 const printProgress = (function() {
   let previousPrint;
   return jobs => {
@@ -109,7 +145,7 @@ const printProgress = (function() {
       }
       if (msg) {
         out.push(
-          ` • Browser: ${job.ua.padEnd(
+          ` • Browser: ${job.name.padEnd(
             " ",
             20
           )} Testing mode: ${job.mode.padEnd(" ", 8)} ${msg}`
@@ -129,19 +165,26 @@ const printProgress = (function() {
 
 (async function() {
   try {
-    await tunnel.openTunnel();
+    await openTunnel(
+      {
+        verbose: "true",
+        force: "true",
+        onlyAutomate: "true",
+        forceLocal: "true"
+      });
     const cliFeedbackTimer = setInterval(() => printProgress(jobs), pollTick);
     // Run jobs within concurrency limits
     await new Promise((resolve, reject) => {
       const results = [];
       let resolvedCount = 0;
       function pushJob() {
+        const job = jobs[results.length];
         results.push(
-          jobs[results.length]
+          job
             .run()
             .then(job => {
               if (job.state === "complete") {
-                const [family, version] = job.ua.split("/");
+                const [family, version] = job.name.split("/");
                 _.set(
                   testResults,
                   [family, version, job.mode],
@@ -156,9 +199,31 @@ const printProgress = (function() {
               }
               return job;
             })
-            .catch(e => {
+            .catch(async e => {
               console.log(e.stack || e);
-              reject(e);
+              await wait(30 * 1000);
+              return job.run()
+              .then(job => {
+                if (job.state === "complete") {
+                  const [family, version] = job.name.split("/");
+                  _.set(
+                    testResults,
+                    [family, version, job.mode],
+                    job.getResultSummary()
+                  );
+                }
+                resolvedCount++;
+                if (results.length < jobs.length) {
+                  pushJob();
+                } else if (resolvedCount === jobs.length) {
+                  resolve();
+                }
+                return job;
+              })
+              .catch(e => {
+                console.log(e.stack || e);
+                reject(e);
+              });
             })
         );
       }
@@ -174,7 +239,8 @@ const printProgress = (function() {
 
     printProgress(jobs);
 
-    await tunnel.closeTunnel().then(() => console.log("Tunnel closed"));
+    await closeTunnel();
+    console.log("Tunnel closed");
 
     const totalFailureCount = jobs.reduce(
       (out, job) => out + (job.state === "complete" ? job.results.failed : 1),
@@ -185,7 +251,7 @@ const printProgress = (function() {
       jobs.forEach(job => {
         if (job.results && job.results.tests) {
           job.results.tests.forEach(test => {
-            console.log(" - " + job.ua + ":");
+            console.log(" - " + job.name + ":");
             console.log("    -> " + test.name);
             console.log(
               "       " +
@@ -198,7 +264,7 @@ const printProgress = (function() {
         } else if (job.state !== "complete") {
           console.log(
             " • " +
-              job.ua +
+              job.name +
               " (" +
               job.mode +
               "): " +
