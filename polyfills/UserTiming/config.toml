@@ -14,7 +14,8 @@ ios_chr = "*"
 ios_saf = "*"
 op_mob = "*"
 opera = "<=12"
-safari = "<13.0"
+safari = "*"
 
 [install]
 module = "usertiming"
+

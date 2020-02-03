@@ -7,4 +7,5 @@ docs = "https://developer.mozilla.org/en/docs/Web/API/console"
 edge = "*"
 edge_mob = "*"
 ie = "*"
-firefox = "<39"
+firefox = "1 - 4"
+

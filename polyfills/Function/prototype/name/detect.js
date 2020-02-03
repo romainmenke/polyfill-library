@@ -1,1 +1,1 @@
-'name' in Function.prototype
+'name' in Function.prototype && (function x() {}).name === 'x'

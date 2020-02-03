@@ -7,7 +7,5 @@ notes = [
 ]
 
 [browsers]
-ie = "<12"
-chrome = "<80"
-firefox = "<69"
-safari = "<10.1"
+ie = "8 - 10"
+
