@@ -58,18 +58,16 @@ configSource.test = { ci: false };
 var configFileSource = TOML.stringify(configSource);
 
 function intlLocaleDetectFor(locale) {
-	return "(function(){try{" +
-				"return 'Intl' in this && " +
-				"Intl.Collator && " +
-				"Intl.Collator.supportedLocalesOf && " +
-				"Intl.Collator.supportedLocalesOf('"+locale+"').length === 1 && " +
-				"Intl.DateTimeFormat && " +
-				"Intl.DateTimeFormat.supportedLocalesOf && " +
-				"Intl.DateTimeFormat.supportedLocalesOf('"+locale+"').length === 1 && " +
-				"Intl.NumberFormat && " +
-				"Intl.NumberFormat.supportedLocalesOf && " +
-				"Intl.NumberFormat.supportedLocalesOf('"+locale+"').length === 1" +
-			"} catch (e) { return false;}}())";
+	return "'Intl' in this && " +
+			"Intl.Collator && " +
+			"Intl.Collator.supportedLocalesOf && " +
+			"Intl.Collator.supportedLocalesOf('"+locale+"').length === 1 && " +
+			"Intl.DateTimeFormat && " +
+			"Intl.DateTimeFormat.supportedLocalesOf && " +
+			"Intl.DateTimeFormat.supportedLocalesOf('"+locale+"').length === 1 && " +
+			"Intl.NumberFormat && " +
+			"Intl.NumberFormat.supportedLocalesOf && " +
+			"Intl.NumberFormat.supportedLocalesOf('"+locale+"').length === 1";
 }
 
 console.log('Importing Intl.~locale.* polyfill from ' + LocalesPath);
@@ -91,18 +89,15 @@ locales.forEach(function (file) {
 	writeFileIfChanged(configOutputPath, configFileSource);
 });
 
-var intlPolyfillDetect = "(function(){try{" +"'Intl' in this && \n Intl.Collator && \n Intl.DateTimeFormat && \n Intl.NumberFormat && \n Intl.NumberFormat.supportedLocalesOf ";
+var intlPolyfillDetect = "'Intl' in this && \n Intl.Collator && \n Intl.DateTimeFormat && \n Intl.NumberFormat && \n Intl.NumberFormat.supportedLocalesOf ";
 
-locales.forEach(function (file) {
-	var locale = file.slice(0, file.indexOf('.'));
+locales.forEach(function (locale) {
 	intlPolyfillDetect += "&& \n Intl.Collator.supportedLocalesOf('"+locale+"').length === 1 ";
 	intlPolyfillDetect += "&& \n Intl.DateTimeFormat.supportedLocalesOf('"+locale+"').length === 1 ";
 	intlPolyfillDetect += "&& \n Intl.NumberFormat.supportedLocalesOf('"+locale+"').length === 1 ";
 })
 
-intlPolyfillDetect += "} catch (e) { return false;}}())";
-
 var detectOutputPath = path.join(IntlPolyfillOutput, 'detect.js');
-fs.writeFileSync(detectOutputPath, intlPolyfillDetect);
+writeFileIfChanged(detectOutputPath, intlPolyfillDetect);
 console.log(locales.length + ' imported locales');
 console.log('Intl polyfill imported successfully');

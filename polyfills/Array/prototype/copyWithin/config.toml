@@ -11,8 +11,9 @@ docs = "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global
 [browsers]
 edge = "<12"
 edge_mob = "<12"
-chrome = "<80"
-firefox = "<69"
+chrome = "<45"
+firefox = "<32"
 ie = "*"
-safari = "<14"
+safari = "<9"
 opera = "<32"
+

@@ -17,5 +17,6 @@ ios_saf = "4 - *"
 opera = "10 - 20"
 op_mob = "*"
 op_mini = "*"
-safari = "<13.0"
+safari = "4 - *"
 firefox_mob = "1 - 24"
+

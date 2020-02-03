@@ -18,4 +18,5 @@ op_mini = "*"
 firefox_mob = "1 - 24"
 ie = "*"
 ie_mob = "10 - *"
-safari = "<13.0"
+safari = "*"
+

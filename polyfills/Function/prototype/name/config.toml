@@ -13,6 +13,5 @@ notes = [
 
 [browsers]
 ie = "9 - 11"
-chrome = "<80"
-firefox = "<69"
-safari = "<14"
+chrome = "<15"
+

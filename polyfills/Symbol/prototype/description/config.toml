@@ -7,9 +7,9 @@ docs = "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global
 [browsers]
 edge = "*"
 edge_mob = "*"
-ie = ">8"
-ie_mob = ">8"
-safari = "<13.0"
+ie = "*"
+ie_mob = "*"
+safari = "*"
 chrome = "< 70"
 firefox = "< 63"
 firefox_mob = "< 63"
@@ -19,3 +19,4 @@ op_mini = "*"
 samsung_mob = "*"
 android = "*"
 bb = "*"
+
