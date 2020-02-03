@@ -1,5 +1,3 @@
-/* eslint-disable mocha/no-hooks-for-single-case */
-/* eslint-disable mocha/no-top-level-hooks */
 /* eslint-env mocha */
 
 'use strict';
@@ -13,7 +11,7 @@ sinon.assert.expose(assert, {
 	prefix: ''
 });
 
-beforeEach(function() {
+beforeEach(() => {
 	mockery.enable({
 		useCleanCache: true,
 		warnOnUnregistered: false,
@@ -21,7 +19,7 @@ beforeEach(function() {
 	});
 });
 
-afterEach(function() {
+afterEach(() => {
 	mockery.deregisterAll();
 	mockery.disable();
 });

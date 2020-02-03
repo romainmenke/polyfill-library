@@ -5,38 +5,38 @@ const assert = require('proclaim');
 const sinon = require('sinon');
 const setsToArrays = require('../../utils/sets_to_arrays');
 
-describe('lib/aliases', function() {
+describe('lib/aliases', () => {
 	let aliasResolver;
 
-	beforeEach(function() {
+	beforeEach(() => {
 		aliasResolver = require('../../../lib/aliases');
 	});
 
-	it('exports a function', function() {
+	it('exports a function', () => {
 		assert.isFunction(aliasResolver);
 	});
 
-	it('has a length of 0', function() {
+	it('has a length of 0', () => {
 		assert.equal(aliasResolver.length, 0);
 	});
 
-	describe('aliasResolver(resolvers)', function() {
+	describe('aliasResolver(resolvers)', () => {
 
-		it('returns a function', function() {
+		it('returns a function', () => {
 			assert.isFunction(aliasResolver());
 		});
 
-		it('returns a function with length 1', function() {
+		it('returns a function with length 1', () => {
 			assert.equal(aliasResolver().length, 1);
 		});
 
-		describe('aliasResolver(resolvers)(featureSet)', function() {
+		describe('aliasResolver(resolvers)(featureSet)', () => {
 
-			it('returns a promise', function() {
+			it('returns a promise', () => {
 				assert.isInstanceOf(aliasResolver(() => {})(), Promise);
 			});
 
-			it('calls the resolver function with each key in the featureSet', function() {
+			it('calls the resolver function with each key in the featureSet', () => {
 				const spy = sinon.spy();
 				const resolver = aliasResolver(spy);
 				const featureSet = {
@@ -51,11 +51,11 @@ describe('lib/aliases', function() {
 					});
 			});
 
-			describe("AliasResolver", function() {
+			describe("AliasResolver", () => {
 
-				describe("#resolve(polyfills)", function() {
+				describe("#resolve(polyfills)", () => {
 
-					it("should take a list of polyfill objects and resolve each to potentially many other polyfill objects based on a sequence of resolution functions", function() {
+					it("should take a list of polyfill objects and resolve each to potentially many other polyfill objects based on a sequence of resolution functions", () => {
 
 						// Initialise the resolver with a dictionary of names mapping to
 						// potentially many names (eg modernizr:es5array contains all the ES5
@@ -87,7 +87,7 @@ describe('lib/aliases', function() {
 						});
 					});
 
-					it("should remove duplicate polyfills once expanded and record which aliases included each polyfill once duplicates are removed", function() {
+					it("should remove duplicate polyfills once expanded and record which aliases included each polyfill once duplicates are removed", () => {
 						const configuredAliases = {
 							"alias_name_a": ["resolved_name_a", "resolved_name_b"],
 							"alias_name_b": ["resolved_name_c", "resolved_name_b"]
@@ -122,7 +122,7 @@ describe('lib/aliases', function() {
 						});
 					});
 
-					it("should pass flags from the aliases to their resolved counterparts", function() {
+					it("should pass flags from the aliases to their resolved counterparts", () => {
 						const configuredAliases = {
 							"alias_name_a": ["resolved_name_a", "resolved_name_b"],
 							"alias_name_b": ["resolved_name_c", "resolved_name_d"]
@@ -159,7 +159,7 @@ describe('lib/aliases', function() {
 						});
 					});
 
-					it("should concatenate duplicate polyfills' flags and aliases", function() {
+					it("should concatenate duplicate polyfills' flags and aliases", () => {
 						const configuredAliases = {
 							"alias_name_a": ["resolved_name_a", "resolved_name_b"],
 							"alias_name_b": ["resolved_name_c", "resolved_name_b"]
@@ -192,7 +192,7 @@ describe('lib/aliases', function() {
 						});
 					});
 
-					it("should transfer all aliases to the final resolved polyfill identifier", function() {
+					it("should transfer all aliases to the final resolved polyfill identifier", () => {
 						const configuredAliases = {
 							"alias_name_a": ["resolved_name_a", "resolved_name_b"],
 							"alias_name_b": ["resolved_name_c", "resolved_name_b"]
@@ -227,7 +227,7 @@ describe('lib/aliases', function() {
 						});
 					});
 
-					it("should only record the rule that included the polyfill in the final aliasOf array if an alias was used", function() {
+					it("should only record the rule that included the polyfill in the final aliasOf array if an alias was used", () => {
 						const configuredAliases = {
 							"alias_name_a": ["resolved_name_a", "resolved_name_b"],
 							"alias_name_b": ["resolved_name_c", "resolved_name_b"]
@@ -259,7 +259,7 @@ describe('lib/aliases', function() {
 						});
 					});
 
-					it("should handle cases where a resolver function cannot resolve a name so returns undefined by passing the polyfill identifier to the next function", function() {
+					it("should handle cases where a resolver function cannot resolve a name so returns undefined by passing the polyfill identifier to the next function", () => {
 						const configuredAliases = {
 							"alias_name_a": ["resolved_name_a", "resolved_name_b"],
 							"alias_name_b": ["resolved_name_c", "resolved_name_b"]
@@ -301,7 +301,7 @@ describe('lib/aliases', function() {
 						});
 					});
 
-					it('should be able to resolve an alias to one of the other inputs', function() {
+					it('should be able to resolve an alias to one of the other inputs', () => {
 						const resolver = aliasResolver(
 							function(name) {
 								return (name === 'alias_name_a') ? ['name_b'] : undefined;
@@ -325,7 +325,7 @@ describe('lib/aliases', function() {
 						});
 					});
 
-					it('should be able to resolve an alias to itself', function() {
+					it('should be able to resolve an alias to itself', () => {
 						const resolver = aliasResolver(
 							function(name) {
 								return [name];

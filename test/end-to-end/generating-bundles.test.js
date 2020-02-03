@@ -7,7 +7,7 @@ const polyfillLibrary = require('../../');
 describe("polyfill-library", function () {
     this.timeout(30000);
 
-    it('should produce same output for same bundle', async function () {
+    it('should produce same output for same bundle', async () => {
         const bundle1 = await polyfillLibrary.getPolyfillString({
             features: {
                 all: {}
