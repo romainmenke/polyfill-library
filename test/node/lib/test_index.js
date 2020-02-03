@@ -8,9 +8,9 @@ const polyfillio = require('../../../lib/index');
 describe("polyfillio", function () {
 	this.timeout(30000);
 
-	describe(".getPolyfills(features)", () => {
+	describe(".getPolyfills(features)", function() {
 
-		it("should not include unused dependencies", () => {
+		it("should not include unused dependencies", function() {
 			const input = {
 				features: {
 					'Promise': {}
@@ -20,7 +20,7 @@ describe("polyfillio", function () {
 			return polyfillio.getPolyfills(input).then(result => assert.deepEqual(setsToArrays(result), {}));
 		});
 
-		it("should return polyfills for unknown UA when unknown is not set", () => {
+		it("should return polyfills for unknown UA when unknown is not set", function() {
 			return polyfillio.getPolyfills({
 				features: {
 					'Math.sign': {}
@@ -46,7 +46,7 @@ describe("polyfillio", function () {
 			}));
 		});
 
-		it("should return no polyfills for unknown UA when unknown is set to ignore", () => {
+		it("should return no polyfills for unknown UA when unknown is set to ignore", function() {
 			return polyfillio.getPolyfills({
 				features: {
 					'Math.sign': {}
@@ -56,7 +56,7 @@ describe("polyfillio", function () {
 			}).then(result => assert.deepEqual(setsToArrays(result), {}));
 		});
 
-		it("should return polyfills for unknown UA when unknown is set to `polyfill`", () => {
+		it("should return polyfills for unknown UA when unknown is set to `polyfill`", function() {
 			return polyfillio.getPolyfills({
 				features: {
 					'Math.sign': {}
@@ -83,7 +83,7 @@ describe("polyfillio", function () {
 			}));
 		});
 
-		it("should return polyfills for unknown UA when unknown is set to `polyfill` and `uaString` param is not set", () => {
+		it("should return polyfills for unknown UA when unknown is set to `polyfill` and `uaString` param is not set", function() {
 			// ... even when `uaString` param is missing entirely
 			return polyfillio.getPolyfills({
 				features: {
@@ -110,7 +110,7 @@ describe("polyfillio", function () {
 			}));
 		});
 
-		it("should understand the 'all' alias", () => {
+		it("should understand the 'all' alias", function() {
 			return polyfillio.getPolyfills({
 				features: {
 					'all': {
@@ -121,7 +121,7 @@ describe("polyfillio", function () {
 			}).then(result => assert(Object.keys(result).length > 0));
 		});
 
-		it("should respect the excludes option", () => {
+		it("should respect the excludes option", function() {
 			return Promise.all([
 				polyfillio.getPolyfills({
 					features: {
@@ -808,9 +808,9 @@ describe("polyfillio", function () {
 		});
 	});
 
-	describe('.getPolyfillString', () => {
+	describe('.getPolyfillString', function() {
 
-		it('should produce different output when gated flag is enabled', () => {
+		it('should produce different output when gated flag is enabled', function() {
 			return Promise.all([
 				polyfillio.getPolyfillString({
 					features: {
@@ -831,7 +831,7 @@ describe("polyfillio", function () {
 			});
 		});
 
-		it('should support streaming output', done => {
+		it('should support streaming output', function(done) {
 			const ReadableStream = require('stream').Readable;
 			const buf = [];
 			const s = polyfillio.getPolyfillString({
