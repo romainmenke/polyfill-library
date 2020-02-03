@@ -31,9 +31,14 @@ const browserstacklist = TOML.parse(
   fs.readFileSync(path.join(__dirname, "./browserstackBrowsers.toml"), "utf-8")
 ).browsers;
 
-const browsers = browserlist.filter(
-  uaString => normalizeUserAgent(uaString) !== "other/0.0.0"
-);
+const browsers = browserlist.filter(uaString => {
+  if (uaString.startsWith('ios/')) {
+    uaString = uaString.replace('ios', 'ios_saf');
+  }
+  return normalizeUserAgent(uaString) !== "other/0.0.0";
+});
+
+console.log({ browsers });
 
 const useragentToBrowserObj = browserWithVersion => {
   const [browser, version] = browserWithVersion.split("/");
@@ -42,16 +47,22 @@ const useragentToBrowserObj = browserWithVersion => {
       return {
         deviceName: browserObject.device,
         platformName: browserObject.os,
-        platformVersion: browserObject.os_version
+        platformVersion: browserObject.os_version,
+        real_mobile: true,
+        'browserstack.appium_version': '1.9.1'
       };
     } else if (
       browser === browserObject.browser &&
       version === browserObject.browser_version
     ) {
-      return {
+      const o = {
         browserName: browserObject.browser,
-        browserVersion: browserObject.browser_version
+        browserVersion: browserObject.browser_version, 
       };
+      if (o.browserName === 'edge') {
+        o["browserstack.selenium_version"] = "3.5.2";
+      }
+      return o;
     }
   }
   throw new Error(
@@ -61,10 +72,15 @@ const useragentToBrowserObj = browserWithVersion => {
 
 const testResultsFile = path.join(__dirname, "results.json");
 const testResults = {};
-const pollTick = 100;
+const pollTick = 3000;
 const testBrowserTimeout = 120000;
-const mode = ["all", "control"].filter(x => process.argv.includes(x))[0] || "all";
-const url = "http://localhost:9876/test?includePolyfills=" + (mode === "all" ? "yes" : "no");
+const mode =
+  ["all", "control", "targeted"].filter(x => process.argv.includes(x))[0] || "all";
+
+const director = process.argv.includes("director");
+const always = "always=" + mode === "all" ? "yes" : "no";
+const includePolyfills = "includePolyfills=" +(mode === "all" ? "yes" : "no");
+const url = `http://bs-local.com:9876/${director ? '' : 'test'}?${includePolyfills}&${always}`;
 const tunnelId =
   "build:" +
   (process.env.CIRCLE_BUILD_NUM || process.env.NODE_ENV || "null") +
@@ -226,7 +242,7 @@ const printProgress = (function() {
             console.log("    -> " + test.name);
             console.log(
               "       " +
-                url.replace(/test\/director/, "test/tests") +
+                url.replace(/\//, "/test") +
                 "&feature=" +
                 test.failingSuite
             );

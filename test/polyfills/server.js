@@ -1,7 +1,7 @@
 "use strict";
 
 require("hard-rejection/register");
-
+const semver = require("semver");
 const polyfillio = require("../../lib/index");
 const fs = require("fs");
 const promisify = require("util").promisify;
@@ -20,11 +20,11 @@ const runnerTemplate = handlebars.compile(
   })
 );
 
-function createPolyfillLibraryConfigFor(features) {
+function createPolyfillLibraryConfigFor(features, always) {
   return features.split(",").reduce((config, feature) => {
     return Object.assign(config, {
       [feature]: {
-        flags: new Set(["always", "gated"])
+        flags: new Set(always ? ["always", "gated"] : [])
       }
     });
   }, {});
@@ -48,29 +48,32 @@ app.get("/polyfill.js", async (request, response) => {
   const polyfillsWithTests = await testablePolyfills();
   const features = polyfillsWithTests.map(polyfill => polyfill.feature);
   const params = {
-    features: createPolyfillLibraryConfigFor(features.join(',')),
+    features: createPolyfillLibraryConfigFor(features.join(",")),
     minify: false,
     stream: true,
     uaString: "other/0.0.0"
   };
 
   const headers = {
-		"Content-Type": "text/javascript; charset=utf-8",
-	};
-	response.status(200);
-	response.set(headers);
+    "Content-Type": "text/javascript; charset=utf-8"
+  };
+  response.status(200);
+  response.set(headers);
 
   polyfillio.getPolyfillString(params).pipe(response);
 });
 
 app.listen(port, () => console.log(`Test server listening on port ${port}!`));
 
-async function testablePolyfills() {
+async function testablePolyfills(isIE8) {
   const polyfills = await polyfillio.listAllPolyfills();
   const polyfilldata = [];
 
   for (const polyfill of polyfills) {
     const config = await polyfillio.describePolyfill(polyfill);
+    if (config.isTestable && config.isPublic && config.hasTests && isIE8 && !semver.satisfies("8.0.0", config.browsers.ie)) {
+      continue;
+    }
     if (config.isTestable && config.isPublic && config.hasTests) {
       const baseDir = path.resolve(__dirname, "../../polyfills");
       const testFile = path.join(baseDir, config.baseDir, "/tests.js");
@@ -99,8 +102,11 @@ async function testablePolyfills() {
 
 function createEndpoint(template) {
   return async (request, response) => {
+    const ua = request.get("User-Agent");
+    const isIE8 = polyfillio.normalizeUserAgent(ua) === "ie/8.0.0";
     const feature = request.query.feature || "";
     const includePolyfills = request.query.includePolyfills || "no";
+    const always = request.query.always || "no";
 
     if (includePolyfills !== "yes" && includePolyfills !== "no") {
       response.status(400);
@@ -109,8 +115,16 @@ function createEndpoint(template) {
       );
       return;
     }
+    
+    if (always !== "yes" && always !== "no") {
+      response.status(400);
+      response.send(
+        "always query parameter is an invalid value, it can only be 'yes' or 'no'."
+      );
+      return;
+    }
 
-    const polyfills = await testablePolyfills();
+    const polyfills = await testablePolyfills(isIE8);
 
     // Filter for querystring args
     const features = feature
@@ -125,14 +139,14 @@ function createEndpoint(template) {
     ];
 
     let beforeTestSuite = "";
-    if (includePolyfills !== "no") {
-      const polyfillsWithTests = await testablePolyfills();
+    if (includePolyfills === "yes") {
+      const polyfillsWithTests = await testablePolyfills(isIE8);
       const features = polyfillsWithTests.map(polyfill => polyfill.feature);
       const params = {
-        features: createPolyfillLibraryConfigFor(features.join(',')),
+        features: createPolyfillLibraryConfigFor(feature ? feature : features.join(","), always === "yes"),
         minify: false,
         stream: false,
-        uaString: "other/0.0.0"
+        uaString: always === "yes" ? "other/0.0.0" : request.get('user-agent')
       };
 
       beforeTestSuite = await polyfillio.getPolyfillString(params);
@@ -153,11 +167,13 @@ function createEndpoint(template) {
 
       response.send(
         template({
+          features: features,
           styles: await readFile(require.resolve("mocha/mocha.css"), "utf-8"),
           testSetup: Array.isArray(testSetup) ? testSetup : [testSetup],
           beforeTestSuite: beforeTestSuite,
           testSuite: testSuite,
-          mode: includePolyfills,
+          includePolyfills: includePolyfills,
+          always: always,
           afterTestSuite: `
           // During the test run, surface the test results in Browserstacks' preferred format
           function run() {
@@ -207,7 +223,7 @@ function createEndpoint(template) {
             runner.on('end', function() {
               window.global_test_results = results;
               if (parent && parent.receiveTestResults) {
-                var flist = "{{#features}}{{feature}},{{/features}}".split(",").slice(0, -1);
+                var flist = ["${feature}"];
                 parent.receiveTestResults(flist, results);
               }
             });

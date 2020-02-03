@@ -18,5 +18,6 @@ docs = "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global
 
 [browsers]
 ie = "6 - 8"
-safari = "4"
-
+safari = "<14"
+chrome = "<80"
+firefox = "<69"

@@ -66,7 +66,6 @@ async function main() {
 			const missing = intersection(failedPolyfilled, failedNative);
 			const polyfilled = difference(failedNative, failedPolyfilled);
 			const native = difference(allTests, failedNative);
-            console.log({missing, polyfilled})
 
 			native.forEach(feature => buildData(builtCompatTable, browserName, version, feature, "native"));
 			polyfilled.forEach(feature => buildData(builtCompatTable, browserName, version, feature, "polyfilled"));
