@@ -47,11 +47,6 @@ describe('lib/sources', function() {
 		assert.isFunction(sources.listPolyfills);
 	});
 
-	it('has a listPolyfills method', function() {
-		const sources = require('../../../lib/sources');
-		assert.isFunction(sources.listPolyfills);
-	});
-
 	it('has a getConfigAliases method', function() {
 		const sources = require('../../../lib/sources');
 		assert.isFunction(sources.getConfigAliases);
@@ -127,14 +122,6 @@ describe('lib/sources', function() {
 			return sources.getPolyfillMeta('Array.of').then(meta => {
 				assert.isUndefined(meta);
 			});
-		});
-	});
-
-	describe('sources.listPolyfills()', function() {
-		it('returns a promise which resolves with  an array containing names for each polyfilled feature', function() {
-			fs.readdir.yields(undefined, ['Array.from', 'Symbol']);
-			const sources = require('../../../lib/sources');
-			return sources.listPolyfills().then(polyfills => assert.deepEqual(polyfills, ['Array.from', 'Symbol']));
 		});
 	});
 
