@@ -30,6 +30,6 @@ firefox_mob = "<64"
 samsung_mob = "*"
 android = "<67"
 
-# [install]
-# module = "abort-controller"
-# paths = [ "dist/abort-controller.umd.js" ]
+[install]
+module = "abort-controller"
+paths = [ "dist/abort-controller.umd.js" ]
