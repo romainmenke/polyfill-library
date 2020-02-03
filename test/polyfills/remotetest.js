@@ -242,7 +242,7 @@ const printProgress = (function() {
             console.log("    -> " + test.name);
             console.log(
               "       " +
-                url.replace(/\//, "/test") +
+                url.replace("http://bs-local.com:9876/", "http://bs-local.com:9876/test") +
                 "&feature=" +
                 test.failingSuite
             );
