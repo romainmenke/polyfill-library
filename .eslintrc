@@ -29,5 +29,11 @@
 		"no-var": 2,
 		"prefer-const": 1,
 		"no-const-assign": 2
-	}
+	},
+	"plugins": [
+		"mocha"
+	],
+	"extends": [
+		"plugin:mocha/recommended"
+	]
 }

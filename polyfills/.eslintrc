@@ -1,5 +1,4 @@
 {
-  "extends": "eslint:recommended",
   "env": {
     "es6": false,
     "browser": true,
@@ -18,5 +17,12 @@
     "no-dupe-else-if": "error",
     "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
   },
-  "root": true
+  "root": true,
+  "plugins": [
+		"mocha"
+	],
+	"extends": [
+    "plugin:mocha/recommended",
+    "eslint:recommended"
+	]
 }
