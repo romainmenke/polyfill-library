@@ -27,7 +27,7 @@ it('can delete a string property', function () {
     proclaim.isFalse(Object.prototype.hasOwnProperty.call(o, 'a'));
 });
 
-if('Symbol' in this) {
+if('Symbol' in self) {
     it('can delete a Symbol property', function () {
         var a = Symbol();
         var o = {};
@@ -57,24 +57,24 @@ if ('freeze' in Object) {
 }
 
 it('throws a TypeError if target is not an Object', function () {
-    proclaim.throws(function () {
+    proclaim["throws"](function () {
         Reflect.deleteProperty(1, 'a');
     }, TypeError);
 
-    proclaim.throws(function () {
+    proclaim["throws"](function () {
         Reflect.deleteProperty(null, 'a');
     }, TypeError);
 
-    proclaim.throws(function () {
+    proclaim["throws"](function () {
         Reflect.deleteProperty(undefined, 'a');
     }, TypeError);
 
-    proclaim.throws(function () {
+    proclaim["throws"](function () {
         Reflect.deleteProperty('', 'a');
     }, TypeError);
     
-    if ('Symbol' in this) {
-        proclaim.throws(function () {
+    if ('Symbol' in self) {
+        proclaim["throws"](function () {
             Reflect.deleteProperty(Symbol(), 'a');
         }, TypeError);
     }
