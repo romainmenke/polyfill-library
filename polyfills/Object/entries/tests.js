@@ -29,11 +29,9 @@ var arePropertyDescriptorsSupported = function() {
 			enumerable: false,
 			value: obj
 		});
-		/* eslint-disable no-unused-vars, no-restricted-syntax */
 		for (var _ in obj) {
 			return false;
 		}
-		/* eslint-enable no-unused-vars, no-restricted-syntax */
 		return obj.x === obj;
 	} catch (e) { // this is IE 8.
 		return false;
@@ -287,7 +285,9 @@ it('works as expected', function () {
 		w: 2,
 		e: 3
 	}), [['q', 1], ['w', 2], ['e', 3]]);
+
 	proclaim.deepEqual(Object.entries(new String('qwe')), [['0', 'q'], ['1', 'w'], ['2', 'e']]);
+
 	if ('assign' in Object && 'create' in Object) {
 		proclaim.deepEqual(Object.entries(Object.assign(Object.create({
 			q: 1,

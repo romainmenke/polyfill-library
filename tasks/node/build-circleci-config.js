@@ -12,7 +12,7 @@ const polyfillsWhichHaveTests = globby.sync(['polyfills/**/tests.js', '!polyfill
     entry => entry.replace('polyfills/', '').replace('/tests.js', '').replace(/\//g, '.')
 );
 
-_.chunk(polyfillsWhichHaveTests, 14).map(polyfillsWhichHaveTests => {
+_.chunk(polyfillsWhichHaveTests, 3).map(polyfillsWhichHaveTests => {
     const testCommands = polyfillsWhichHaveTests.map(feature => {
         return {
             run: {
@@ -48,7 +48,7 @@ _.chunk(polyfillsWhichHaveTests, 14).map(polyfillsWhichHaveTests => {
                     ignore: "master"
                 }
             },
-            requires: ["check_circle_config", "lint_js", "unit_tests"].concat(index > 0 ? previousJob:[])
+            requires: index === 0 ? ["check_circle_config", "lint_js", "unit_tests"] : [previousJob]
         }
     });
 });
