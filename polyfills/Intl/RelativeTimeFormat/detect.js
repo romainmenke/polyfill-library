@@ -1,1 +1,1 @@
-'Intl.RelativeTimeFormat' in this
+'Intl' in self && 'RelativeTimeFormat' in self.Intl
