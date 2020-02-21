@@ -1,1 +1,1 @@
-'Intl.PluralRules' in this
+'Intl' in self && 'PluralRules' in self.Intl
