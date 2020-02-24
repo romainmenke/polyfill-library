@@ -9,8 +9,8 @@ notes = [
 
 [browsers]
 android = "<63"
-ie = "<18"
-ie_mob = "*"
+ie = "9 - *"
+ie_mob = "9 - *"
 firefox = "<58"
 opera = "<50"
 chrome = "<63"
