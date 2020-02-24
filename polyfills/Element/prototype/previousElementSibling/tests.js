@@ -1,3 +1,6 @@
+/* eslint-env mocha, browser */
+/* global proclaim */
+
 it("should return null if the node is the only child of its parent node", function () {
   var parent = document.createElement('div'),
       p = document.createElement('p');
@@ -8,7 +11,7 @@ it("should return null if the node is the only child of its parent node", functi
 
 it("should return null if the node only has text sibling", function () {
   var parent = document.createElement('div'),
-      p = document.createElement('p');
+      p = document.createElement('p'),
       text = document.createTextNode('Hi there, how are you doing today?');
   parent.appendChild(p);
   parent.appendChild(text);
@@ -18,7 +21,7 @@ it("should return null if the node only has text sibling", function () {
 
 it("should return null if the node only has comment sibling", function () {
   var parent = document.createElement('div'),
-      p = document.createElement('p');
+      p = document.createElement('p'),
       comment = document.createComment('This is a comment in the document.');
   parent.appendChild(p);
   parent.appendChild(comment);
