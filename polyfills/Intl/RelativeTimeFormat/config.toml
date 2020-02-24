@@ -1,4 +1,4 @@
-dependencies = [ "Intl", "Intl.PluralRules" ]
+dependencies = [ "Intl", "Intl.~locale.en", "Intl.PluralRules" ]
 license = "MIT"
 spec = "https://tc39.es/proposal-intl-relative-time/#sec-intl-relativetimeformat-constructor"
 repo = "https://github.com/formatjs/formatjs/tree/master/packages/intl-relativetimeformat/polyfill.js"
@@ -9,8 +9,8 @@ notes = [
 
 [browsers]
 android = "<63"
-ie = "*"
-ie_mob = "*"
+ie = "9 - *"
+ie_mob = "9 - *"
 firefox = "<65"
 opera = "<50"
 chrome = "<71"
