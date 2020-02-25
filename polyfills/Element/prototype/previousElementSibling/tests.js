@@ -6,27 +6,27 @@ it("should return null if the node is the only child of its parent node", functi
       p = document.createElement('p');
   parent.appendChild(p);
 
-  proclaim.strictEqual(p.nextElementSibling, null);
+  proclaim.strictEqual(p.previousElementSibling, null);
 });
 
 it("should return null if the node only has text sibling", function () {
   var parent = document.createElement('div'),
       p = document.createElement('p'),
       text = document.createTextNode('Hi there, how are you doing today?');
-  parent.appendChild(p);
   parent.appendChild(text);
+  parent.appendChild(p);
 
-  proclaim.strictEqual(p.nextElementSibling, null);
+  proclaim.strictEqual(p.previousElementSibling, null);
 });
 
 it("should return null if the node only has comment sibling", function () {
   var parent = document.createElement('div'),
       p = document.createElement('p'),
       comment = document.createComment('This is a comment in the document.');
-  parent.appendChild(p);
   parent.appendChild(comment);
+  parent.appendChild(p);
 
-  proclaim.strictEqual(p.nextElementSibling, null);
+  proclaim.strictEqual(p.previousElementSibling, null);
 });
 
 it("should return the first child element", function () {
@@ -38,11 +38,11 @@ it("should return the first child element", function () {
       text = document.createTextNode('Hi there, how are you doing today?'),
       comment = document.createComment('This is a comment in the document.');
   parent.appendChild(h2);
-  parent.appendChild(text);
-  parent.appendChild(comment);
   parent.appendChild(p1);
   parent.appendChild(p2);
+  parent.appendChild(text);
+  parent.appendChild(comment);
   parent.appendChild(p3);
 
-  proclaim.strictEqual(h2.nextElementSibling, p1);
+  proclaim.strictEqual(p3.previousElementSibling, p2);
 });
