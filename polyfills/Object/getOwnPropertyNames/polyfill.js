@@ -5,7 +5,7 @@
   var concat = [].concat;
   var nativeGetOwnPropertyNames = Object.getOwnPropertyNames || Object.keys;
   var cachedWindowNames =
-    typeof self === "object" ? Object.getOwnPropertyNames(self) : [];
+    typeof self === "object" ? nativeGetOwnPropertyNames(self) : [];
 
   // 19.1.2.10 Object.getOwnPropertyNames ( O )
   CreateMethodProperty(
