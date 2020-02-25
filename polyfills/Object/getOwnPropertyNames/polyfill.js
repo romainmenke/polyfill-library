@@ -1,42 +1,33 @@
 /* global CreateMethodProperty, ToObject */
-(function(){
-	var toString = ({}).toString;
-	var split = ''.split;
-	var nativeGetOwnPropertyNames = Object.getOwnPropertyNames;
-	
-	// 19.1.2.10 Object.getOwnPropertyNames ( O )
-	CreateMethodProperty(Object, 'getOwnPropertyNames', function getOwnPropertyNames(O) {
-		var object = ToObject(O);
+(function() {
+  var toString = {}.toString;
+  var split = ''.split;
+  var concat = [].concat;
+  var nativeGetOwnPropertyNames = Object.getOwnPropertyNames || Object.keys;
+  var cachedWindowNames =
+    typeof self === "object" ? Object.getOwnPropertyNames(self) : [];
 
-		if (nativeGetOwnPropertyNames) {
-			return nativeGetOwnPropertyNames.call(this, object);
-		}
-		var buffer = [];
-		var key;
+  // 19.1.2.10 Object.getOwnPropertyNames ( O )
+  CreateMethodProperty(
+    Object,
+    "getOwnPropertyNames",
+    function getOwnPropertyNames(O) {
+      var object = ToObject(O);
 
-		// Non-enumerable properties cannot be discovered but can be checked for by name.
-		// Define those used internally by JS to allow an incomplete solution
-		var commonProps = ['length', "name", "arguments", "caller", "prototype", "observe", "unobserve"];
-
-		if (typeof object === 'undefined' || object === null) {
-			throw new TypeError('Cannot convert undefined or null to object');
-		}
-
-		// Polyfill.io fallback for non-array-like strings which exist in some ES3 user-agents (IE 8)
-		object = toString.call(object) == '[object String]' ? split.call(object, '') : Object(object);
-
-		// Enumerable properties only
-		for (key in object) {
-			if (key !== "__proto__" && Object.prototype.hasOwnProperty.call(object, key)) {
-				buffer.push(key);
-			}
-		}
-
-		// Check for and add the common non-enumerable properties
-		for (var i=0, s=commonProps.length; i<s; i++) {
-			if (commonProps[i] in object) buffer.push(commonProps[i]);
-		}
-
-		return buffer;
-	});
-}());
+      if (toString(object) === "[object Window]") {
+        try {
+          return nativeGetOwnPropertyNames(object);
+        } catch (e) {
+          // IE bug where layout engine calls userland Object.getOwnPropertyNames for cross-domain `window` objects
+          return concat.call([], cachedWindowNames);
+        }
+      }
+      // Polyfill.io fallback for non-array-like strings which exist in some ES3 user-agents (IE 8)
+      object =
+        toString.call(object) == "[object String]"
+          ? split.call(object, "")
+          : Object(object);
+      return nativeGetOwnPropertyNames(object);
+    }
+  );
+})();
