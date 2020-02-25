@@ -1,10 +1,16 @@
-/* global CreateMethodProperty */
-
+/* global CreateMethodProperty, ToObject */
 (function(){
 	var toString = ({}).toString;
 	var split = ''.split;
+	var nativeGetOwnPropertyNames = Object.getOwnPropertyNames;
+	
+	// 19.1.2.10 Object.getOwnPropertyNames ( O )
+	CreateMethodProperty(Object, 'getOwnPropertyNames', function getOwnPropertyNames(O) {
+		var object = ToObject(O);
 
-	CreateMethodProperty(Object, 'getOwnPropertyNames', function getOwnPropertyNames(object) {
+		if (nativeGetOwnPropertyNames) {
+			return nativeGetOwnPropertyNames.call(this, object);
+		}
 		var buffer = [];
 		var key;
 
