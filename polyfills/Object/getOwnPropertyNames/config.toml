@@ -11,8 +11,9 @@ dependencies = [ "_ESAbstract.CreateMethodProperty" ]
 docs = "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyNames"
 
 [browsers]
-firefox = "3.6"
-safari = "4"
-ie = "<9"
-firefox_mob = "3.6"
-
+ie = "*"
+chrome = "<40"
+edge = "<13"
+firefox = "<34"
+firefox_mob = "<34"
+safari = "<9"
