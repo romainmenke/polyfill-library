@@ -17,24 +17,17 @@
 
 var fs = require('graceful-fs');
 var path = require('path');
-var LocalesPath = path.dirname(require.resolve('@formatjs/intl-pluralrules/dist/locale-data/en.js'));
+var LocalesPath = path.dirname(require.resolve('@formatjs/intl-pluralrules/locale-data/en.js'));
 var IntlPolyfillOutput = path.resolve('polyfills/Intl/PluralRules');
 var LocalesPolyfillOutput = path.resolve('polyfills/Intl/PluralRules/~locale');
-var crypto = require('crypto');
 var mkdirp = require('mkdirp');
 var TOML = require('@iarna/toml');
-
-function md5 (contents) {
-	return crypto.createHash('md5').update(contents).digest('hex');
-}
 
 function writeFileIfChanged (filePath, newFile) {
 	if (fs.existsSync(filePath)) {
 		var currentFile = fs.readFileSync(filePath);
-		var currentFileHash = md5(currentFile);
-		var newFileHash = md5(newFile);
 
-		if (newFileHash !== currentFileHash) {
+		if (newFile !== currentFile) {
 			fs.writeFileSync(filePath, newFile);
 		}
   } else {
@@ -54,8 +47,6 @@ configSource.dependencies.push('Intl.PluralRules');
 
 // don't test every single locale - it will be too slow
 configSource.test = { ci: false };
-
-var configFileSource = TOML.stringify(configSource);
 
 function intlLocaleDetectFor(locale) {
 	return "'Intl' in this && " +
@@ -80,7 +71,7 @@ locales.forEach(function (file) {
 	var configOutputPath = path.join(localeOutputPath, 'config.toml');
 	writeFileIfChanged(polyfillOutputPath, localePolyfillSource);
 	writeFileIfChanged(detectOutputPath, intlLocaleDetectFor(locale));
-	writeFileIfChanged(configOutputPath, configFileSource);
+	writeFileIfChanged(configOutputPath, TOML.stringify({...configSource, aliases: [`Intl.~locale.${locale}`].concat(locale === 'en' ? ['Intl'] : [])}));
 });
 
 

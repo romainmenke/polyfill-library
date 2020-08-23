@@ -17,24 +17,17 @@
 
 var fs = require('graceful-fs');
 var path = require('path');
-var LocalesPath = path.dirname(require.resolve('@formatjs/intl-numberformat/dist/locale-data/en.js'));
+var LocalesPath = path.dirname(require.resolve('@formatjs/intl-numberformat/locale-data/en.js'));
 var IntlPolyfillOutput = path.resolve('polyfills/Intl/NumberFormat');
 var LocalesPolyfillOutput = path.resolve('polyfills/Intl/NumberFormat/~locale');
-var crypto = require('crypto');
 var mkdirp = require('mkdirp');
 var TOML = require('@iarna/toml');
-
-function md5 (contents) {
-	return crypto.createHash('md5').update(contents).digest('hex');
-}
 
 function writeFileIfChanged (filePath, newFile) {
 	if (fs.existsSync(filePath)) {
 		var currentFile = fs.readFileSync(filePath);
-		var currentFileHash = md5(currentFile);
-		var newFileHash = md5(newFile);
 
-		if (newFileHash !== currentFileHash) {
+		if (newFile !== currentFile) {
 			fs.writeFileSync(filePath, newFile);
 		}
   } else {
@@ -54,8 +47,6 @@ configSource.dependencies.push('Intl.NumberFormat');
 
 // don't test every single locale - it will be too slow
 configSource.test = { ci: false };
-
-var configFileSource = TOML.stringify(configSource);
 
 function intlLocaleDetectFor(locale) {
 	return "'Intl' in self && Intl.NumberFormat && (function () {\n\t\ttry {\n\t\t  new Intl.NumberFormat('".concat(locale, "', {\n\t\t\tstyle: 'unit',\n\t\t\tunit: 'byte'\n\t\t  });\n\t\t} catch (e) {\n\t\t  return false;\n\t\t}\n\t\treturn true;\n\t  })() && Intl.NumberFormat.supportedLocalesOf('").concat(locale, "').length");
@@ -79,7 +70,7 @@ locales.filter(function(locale) {
 	var configOutputPath = path.join(localeOutputPath, 'config.toml');
 	writeFileIfChanged(polyfillOutputPath, localePolyfillSource);
 	writeFileIfChanged(detectOutputPath, intlLocaleDetectFor(locale));
-	writeFileIfChanged(configOutputPath, configFileSource);
+	writeFileIfChanged(configOutputPath, TOML.stringify({...configSource, aliases: [`Intl.~locale.${locale}`].concat(locale === 'en' ? ['Intl'] : [])}));
 });
 
 

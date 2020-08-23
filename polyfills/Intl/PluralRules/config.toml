@@ -1,10 +1,11 @@
+aliases = ["Intl"]
 dependencies = ["Intl.getCanonicalLocales", "WeakMap"]
 license = "MIT"
 spec = "https://rawgit.com/caridy/intl-plural-rules-spec/master/index.html"
 repo = "https://github.com/formatjs/formatjs/blob/master/packages/intl-pluralrules/polyfill.js"
 docs = "https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/PluralRules"
 notes = [
-  "Locales must be specified separately by prefixing the locale name with `Intl.PluralRules~locale`, eg `Intl.PluralRules~locale.en-GB`."
+  "Locales must be specified separately by prefixing the locale name with `Intl.PluralRules.~locale`, eg `Intl.PluralRules.~locale.en-GB`."
 ]
 
 [browsers]
@@ -12,6 +13,7 @@ android = "<63"
 edge = "<18"
 ie = "9 - *"
 ie_mob = "9 - *"
+edge_mob = "<18"
 firefox = "<58"
 opera = "<50"
 chrome = "<63"
@@ -24,4 +26,3 @@ samsung_mob = "*"
 module = "@formatjs/intl-pluralrules"
 paths = [ "dist/umd/polyfill.js" ]
 postinstall = "update.task.js"
-

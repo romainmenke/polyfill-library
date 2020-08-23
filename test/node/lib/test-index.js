@@ -1,4 +1,4 @@
-/* eslint-env mocha */
+
 'use strict';
 const assert = require('proclaim');
 const setsToArrays = require('../../utils/sets-to-arrays');
@@ -30,7 +30,33 @@ describe("polyfillio", function () {
 				excludes: ['Array.prototype.values'],
 				uaString: 'chrome/61'
 			};
-			return polyfillio.getPolyfills(input).then(result => assert.deepEqual(setsToArrays(result), {}));
+			return polyfillio.getPolyfills(input).then(result => assert.deepEqual(setsToArrays(result), {
+				"Array.prototype.sort": {
+					"aliasOf": [
+						"es6"
+					],
+					"dependencyOf": [],
+					"flags": [],
+				},
+				"_ESAbstract.CreateMethodProperty": {
+					"aliasOf": [
+						"es6"
+					],
+					"dependencyOf": [
+						"Array.prototype.sort"
+					],
+					"flags": [],
+				},
+				"_ESAbstract.IsCallable": {
+					"aliasOf": [
+						"es6"
+					],
+					"dependencyOf": [
+						"Array.prototype.sort"
+					],
+					"flags": [],
+				}
+			}));
 		});
 
 		it("should return polyfills for unknown UA when unknown is not set", () => {
