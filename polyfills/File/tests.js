@@ -5,8 +5,6 @@
 describe('File', function () {
 
 });
-/* eslint-env mocha, browser */
-/* global proclaim, File */
 
 it('is a function', function () {
 	proclaim.isFunction(File);

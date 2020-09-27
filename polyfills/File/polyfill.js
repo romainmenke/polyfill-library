@@ -1,4 +1,4 @@
-/* global self */
+/* global self, CreateMethodProperty */
 // eslint-disable-next-line no-unused-vars
 (function (global) {
     if (function () {
@@ -10,7 +10,7 @@
         }
     }()) {
         return;
-    };
+    }
 
     // File ()
     // https://w3c.github.io/FileAPI/#file-section
@@ -53,12 +53,12 @@
             lastModified = (new Date()).valueOf();
         }
 
-        var self = new Blob(fileBits, options);
-        
-        self._name = n;
-        self._lastModified = lastModified;
+        var file = new Blob(fileBits, options);
 
-        return self;
+        file._name = n;
+        file._lastModified = lastModified;
+
+        return file;
     };
 
     FilePolyfill.prototype = Object.create(Blob.prototype);
