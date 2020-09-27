@@ -14,9 +14,9 @@
 
     // File ()
     // https://w3c.github.io/FileAPI/#file-section
-    var FilePolyfill = function FilePolyfill(fileBits, fileName) {
+    var FilePolyfill = function File(fileBits, fileName) {
         // 1. If NewTarget is undefined, throw a TypeError exception.
-        if (!(this instanceof File)) {
+        if (!(this instanceof global.File)) {
             throw new TypeError('Failed to construct \'File\': Please use the \'new\' operator, this DOM object constructor cannot be called as a function.');
         }
 
