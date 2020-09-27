@@ -14,7 +14,7 @@
 
     // File ()
     // https://w3c.github.io/FileAPI/#file-section
-    var FilePolyfill = function File(fileBits, fileName) {
+    var File = function File(fileBits, fileName) {
         // 1. If NewTarget is undefined, throw a TypeError exception.
         if (!(this instanceof global.File)) {
             throw new TypeError('Failed to construct \'File\': Please use the \'new\' operator, this DOM object constructor cannot be called as a function.');
@@ -61,18 +61,18 @@
         return file;
     };
 
-    FilePolyfill.prototype = Object.create(Blob.prototype);
+    File.prototype = Object.create(Blob.prototype);
 
     // Export the object
     try {
-        CreateMethodProperty(global, 'File', FilePolyfill);
+        CreateMethodProperty(global, 'File', File);
     } catch (e) {
         // IE8 throws an error here if we set enumerable to false.
         // More info on table 2: https://msdn.microsoft.com/en-us/library/dd229916(v=vs.85).aspx
-        global.File = FilePolyfill;
+        global.File = File;
     }
 
-    CreateMethodProperty(global.File.prototype, 'constructor', FilePolyfill);
+    CreateMethodProperty(global.File.prototype, 'constructor', File);
 
     try {
         Object.defineProperty(global.File, 'name', {
