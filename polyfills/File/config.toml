@@ -1,0 +1,34 @@
+#### Aliases
+aliases = []
+
+#### Dependencies
+dependencies = [
+  "_ESAbstract.CreateMethodProperty",
+  "Object.create",
+  "Object.defineProperty",
+  "Blob"
+]
+
+#### Specification Link
+spec = "https://w3c.github.io/FileAPI/#file-section"
+
+#### Documentation Link
+docs = "https://developer.mozilla.org/en-US/docs/Web/API/File"
+
+#### License
+license = "MIT"
+
+#### Browser compatibility
+[browsers]
+ie = "*"
+edge = "<79"
+safari = "<10"
+firefox = "<28"
+chrome = "<38"
+android = "<38"
+firefox_mob = "<28"
+ie_mob = "*"
+opera = "<25"
+op_mob = "*"
+op_mini = "*"
+ios_saf = "<10"
