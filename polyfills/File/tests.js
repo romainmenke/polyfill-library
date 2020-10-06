@@ -1,5 +1,5 @@
 /* eslint-env mocha, browser */
-/* global proclaim, File */
+/* global proclaim */
 
 // store a date value so that we can compare later
 var start = new Date();
