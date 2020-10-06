@@ -107,6 +107,8 @@ app.get(
     const isIE8 = polyfillio.normalizeUserAgent(ua) === "ie/8.0.0";
     const feature = request.query.feature;
     const requestedFeature = request.query.feature !== undefined;
+    const offset = (Number.parseInt(request.query.offset, 10)) || 0;
+    const limit = (Number.parseInt(request.query.limit, 10)) || 10000;
 
     const headers = {
       "Content-Type": "text/javascript; charset=utf-8"
@@ -119,7 +121,7 @@ app.get(
     // Filter for querystring args
     const features = requestedFeature
       ? polyfills.filter(polyfill => feature && feature.split(',').includes(polyfill.feature))
-      : polyfills;
+      : (polyfills.slice(offset, offset+limit));
     const testSuite = features.map(feature => feature.testSuite).join("\n");
 
     response.send(testSuite);
@@ -182,6 +184,9 @@ function createEndpoint(template) {
     const includePolyfills = request.query.includePolyfills || "no";
     const always = request.query.always || "no";
 
+    const offset = (Number.parseInt(request.query.offset, 10)) || 0;
+    const limit = (Number.parseInt(request.query.limit, 10)) || 10000;
+
     if (includePolyfills !== "yes" && includePolyfills !== "no") {
       response.status(400);
       response.send(
@@ -217,9 +222,11 @@ function createEndpoint(template) {
     response.send(
       template({
         requestedFeature: !!feature,
-        features: features.map(f => f.feature).join(','),
+        features: features.map(f => f.feature).slice(offset, offset + limit).join(','),
         includePolyfills: includePolyfills,
         always: always,
+        limit: limit,
+        offset: offset,
         afterTestSuite: `
         // During the test run, surface the test results in Browserstacks' preferred format
         function run() {

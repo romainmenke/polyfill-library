@@ -103,17 +103,20 @@ const tunnelId =
   (process.env.CIRCLE_BUILD_NUM || process.env.NODE_ENV || "null") +
   "_" +
   new Date().toISOString();
-const jobs = browsers.map(browser => {
-  const capability = useragentToBrowserObject(browser);
-  return new TestJob(
-    browser,
-    url,
-    mode,
-    capability,
-    tunnelId,
-    testBrowserTimeout,
-    pollTick
-  );
+const jobs = [];
+browsers.forEach(browser => {
+  for (let i = 0; i < 7; i++) {
+    const capability = useragentToBrowserObject(browser);
+    jobs.push(new TestJob(
+      browser,
+      url + `&limit=50&offset=${i * 50}`,
+      mode,
+      capability,
+      tunnelId,
+      testBrowserTimeout,
+      pollTick
+    ));
+  }
 });
 const tunnel = new Tunnel();
 

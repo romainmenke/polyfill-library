@@ -42,7 +42,7 @@
         var file;
 
         // 1. If NewTarget is undefined, throw a TypeError exception.
-        if (!(this instanceof File) && !(this instanceof FilePolyfill)) {
+        if (!(this instanceof File)) {
             throw new TypeError('Failed to construct \'File\': Please use the \'new\' operator, this DOM object constructor cannot be called as a function.');
         }
 
