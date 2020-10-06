@@ -1,0 +1,19 @@
+'use strict';
+
+const fs = require('graceful-fs');
+const path = require('path');
+
+module.exports = function flattenPolyfillDirectories(directory) {
+	// Recursively discover all subfolders and produce a flattened list.
+	// Directories prefixed with '__' are not polyfill features and are not included.
+	let results = [];
+	for (const item of fs.readdirSync(directory)) {
+		const joined = path.join(directory, item);
+		if (fs.lstatSync(joined).isDirectory() && item.indexOf('__') !== 0) {
+			results = results
+				.concat(flattenPolyfillDirectories(joined))
+				.concat(joined);
+		}
+	}
+	return results;
+}
