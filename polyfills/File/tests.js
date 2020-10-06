@@ -1,10 +1,8 @@
 /* eslint-env mocha, browser */
-// eslint-disable-next-line no-unused-vars
-/* globals proclaim */
+/* global proclaim, File */
 
-describe('File', function () {
-
-});
+// store a date value so that we can compare later
+var start = new Date();
 
 it('is a function', function () {
 	proclaim.isFunction(File);
@@ -24,58 +22,52 @@ it('is not enumerable', function () {
 
 describe('File', function () {
 	it("has valid constructor", function () {
-		new File([], '')
+		proclaim.ok(new File(['a'], 'b.txt'));
 	});
 
-	// it("implements .name", function () {
-	// 	var a = new File([], '');
-	// 	proclaim.equal(a.name, '');
+	it("implements .name", function () {
+		var a = new File([], '');
+		proclaim.equal(a.name, '');
 
-	// 	var b = new File([], 'beta');
-	// 	proclaim.equal(b.name, 'beta');
+		var b = new File([], 'beta');
+		proclaim.equal(b.name, 'beta');
 
-	// 	// The name constructor param takes just about anything
-	// 	// Make sure we match native behaviour.
-	// 	var c = new File([], {});
-	// 	proclaim.equal(c.name, '[object Object]');
+		// The name constructor param takes just about anything
+		// Make sure we match native behaviour.
+		var c = new File([], {});
+		proclaim.equal(c.name, '[object Object]');
 
-	// 	var d = new File([], 5);
-	// 	proclaim.equal(d.name, '5');
+		var d = new File([], 5);
+		proclaim.equal(d.name, '5');
 
-	// 	var d = new File([], function () {});
-	// 	proclaim.equal(d.name, 'function(){}');
+		var eStringer = {};
+		eStringer.toString = function () {
+			return 'stringer';
+		}
+		var e = new File([], eStringer);
+		proclaim.equal(e.name, 'stringer');
+	});
 
-	// 	var eStringer = {};
-	// 	eStringer.toString = function () {
-	// 		return 'stringer';
-	// 	}
-	// 	var e = new File([], eStringer);
-	// 	proclaim.equal(e.name, 'stringer');
+	// Chromium issue : https://bugs.chromium.org/p/chromium/issues/detail?id=1105171
+	// Spec debate : https://github.com/w3c/FileAPI/issues/41
+	// it("implements .name escaping", function () {
+	// 	// 4.1.2 https://w3c.github.io/FileAPI/#file-constructor
+	// 	// Let n be a new string of the same size as the fileName argument to the constructor.
+	// 	// Copy every character from fileName to n, replacing any "/" character (U+002F SOLIDUS) with a ":" (U+003A COLON).
+	// 	var f = new File([], '/alpha//beta/');
+	// 	proclaim.equal(f.name, ":alpha::beta:");
 	// });
 
-	// // Chromium issue : https://bugs.chromium.org/p/chromium/issues/detail?id=1105171
-	// // Spec debate : https://github.com/w3c/FileAPI/issues/41
-	// // it("implements .name escaping", function () {
-	// // 	// 4.1.2 https://w3c.github.io/FileAPI/#file-constructor
-	// // 	// Let n be a new string of the same size as the fileName argument to the constructor.
-	// // 	// Copy every character from fileName to n, replacing any "/" character (U+002F SOLIDUS) with a ":" (U+003A COLON).
-	// // 	var f = new File([], '/alpha//beta/');
-	// // 	proclaim.equal(f.name, ":alpha::beta:");
-	// // });
+	it("implements .lastModified", function () {
+		var a = new File([], '', {
+			lastModified: 100
+		});
+		proclaim.equal(a.lastModified, 100);
 
-	// it("implements .lastModified", function () {
-	// 	// set "now" so that we can compare later
-	// 	var now = new Date();
-
-	// 	var a = new File([], '', {
-	// 		lastModified: 100
-	// 	});
-	// 	proclaim.equal(a.lastModified, 100);
-
-	// 	// Hard to get a fixed number without passing an exact value for lastModified
-	// 	// Just checking if it is a number
-	// 	var b = new File([], 'beta');
-	// 	proclaim.equal(typeof b.lastModified, 'number');
-	// 	proclaim.ok(now < b.lastModified);
-	// });
+		// Hard to get a fixed number without passing an exact value for lastModified
+		// Just checking if it is a number
+		var b = new File([], 'beta');
+		proclaim.equal(typeof b.lastModified, 'number');
+		proclaim.ok(start.valueOf() < b.lastModified.valueOf());
+	});
 });

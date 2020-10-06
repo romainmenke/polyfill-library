@@ -1,5 +1,6 @@
-/* This needs to be an expression which evaluates to true if the feature exists */
-'File' in self && (function () {
+(function (global) {
+	if (!('File' in global)) return false;
+
 	try {
 		new File(['a'], 'b.txt', {
 			type: "text/plain"
@@ -8,4 +9,4 @@
 	} catch (e) {
 		return false;
 	}
-}())
+}(self))
