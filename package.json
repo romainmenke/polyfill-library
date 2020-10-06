@@ -29,7 +29,7 @@
     "build-parallel": "npm run clean && node tasks/updatesources && node tasks/buildsources/buildsources",
     "watch": "npm run clean && node tasks/updatesources && node tasks/buildsources/watchsource",
     "fmt": "eslint . --fix",
-    "test-library": "npm run build && npm run test-node && npm run test-node-unit && npm run test-end-to-end",
+    "test-library": "npm run build-parallel && npm run test-node && npm run test-node-unit && npm run test-end-to-end",
     "test-polyfills": "karma start",
     "test-all-polyfills": "node ./test/polyfills/test-all-features.js",
     "test-end-to-end": "mocha test/end-to-end/**/*.test.js",
