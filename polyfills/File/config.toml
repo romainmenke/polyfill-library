@@ -3,7 +3,6 @@ aliases = []
 
 #### Dependencies
 dependencies = [
-  "Window",
   "_ESAbstract.CreateMethodProperty",
   "Object.create",
   "Object.defineProperty",

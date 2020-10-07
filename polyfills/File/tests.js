@@ -1,9 +1,6 @@
 /* eslint-env mocha, browser */
 /* global proclaim */
 
-// store a date value so that we can compare later
-var start = new Date();
-
 it('is a function', function () {
 	proclaim.isFunction(File);
 });
@@ -68,6 +65,5 @@ describe('File', function () {
 		// Just checking if it is a number
 		var b = new File([], 'beta');
 		proclaim.equal(typeof b.lastModified, 'number');
-		proclaim.ok(start.valueOf() < b.lastModified.valueOf());
 	});
 });
