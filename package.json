@@ -25,7 +25,7 @@
   "scripts": {
     "lint": "eslint polyfills lib tasks test",
     "clean": "rimraf ./polyfills/__dist",
-    "build": "npm run clean && node tasks/updatesources && node tasks/buildsources",
+    "build": "npm run clean && node tasks/updatesources && node tasks/buildsources/buildsources",
     "build-parallel": "npm run clean && node tasks/updatesources && node tasks/buildsources/buildsources",
     "watch": "npm run clean && node tasks/updatesources && node tasks/buildsources/watchsource",
     "fmt": "eslint . --fix",
