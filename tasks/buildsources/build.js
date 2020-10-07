@@ -27,6 +27,9 @@ module.exports = function build(feature = undefined) {
 					process.env["MAXPROCS"] || 9000
 				)
 			);
+
+			console.log(maxProc);
+			console.log(require("os").cpus().length);
 			const slicedPolyfillPaths = [];
 			const polyfillPaths = flattenPolyfillDirectories(source);
 
