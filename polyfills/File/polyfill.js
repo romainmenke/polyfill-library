@@ -61,7 +61,12 @@
         // Copy every character from fileName to n, replacing any "/" character (U+002F SOLIDUS) with a ":" (U+003A COLON).
         // WARNING : This part of the spec is still debated and UA's implement inconsistently. https://github.com/w3c/FileAPI/issues/41
         // When spec settles maybe add : .replace(/\//g, ':')
-        var n = fileName.toString();
+        var n;
+        if (fileName === null) {
+            n = 'null';
+        } else if (typeof fileName.toString === 'function') {
+            n = fileName.toString();
+        }
 
         var options;
         if (arguments.length > 2) {
@@ -129,9 +134,9 @@
         return file;
     };
 
-    if (_hasNativeFile) {
+    if (_hasNativeFile && _nativeFileProto) {
         File.prototype = Object.create(_nativeFileProto);
-    } else {
+    } else if (Blob.prototype) {
         File.prototype = Object.create(Blob.prototype);
     }
 
