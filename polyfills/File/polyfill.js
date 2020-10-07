@@ -130,9 +130,9 @@
     };
 
     if (_hasNativeFile) {
-        File.prototype = Object.create(Blob.prototype);
-    } else {
         File.prototype = Object.create(_nativeFileProto);
+    } else {
+        File.prototype = Object.create(Blob.prototype);
     }
 
     // Export the object
