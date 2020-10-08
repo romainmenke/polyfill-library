@@ -16,7 +16,7 @@
 	</style>
 
 	<script>
-		var runner, timer;
+		var runners, timer;
 		var globalresults = {
 			passed: 0,
 			failed: 0,
@@ -35,30 +35,60 @@
 		var timeoutMaxRetries = 2;
 		var timeoutRetryCount = 0;
 		window.onload = function() {
-			runner = document.getElementById('runner');
+			runners = [
+				document.getElementById('runner-a'),
+				document.getElementById('runner-b'),
+				document.getElementById('runner-c'),
+				document.getElementById('runner-d')
+			];
 			if (queue.length) {
-				executeTest();
+				for (i = 0; i < runners.length; i++) {
+					setTimeout(function() {
+						executeTest();
+					}, 50 * i);
+				}
 			} else {
 				log('No features to test');
 			}
 		};
 		function executeTest() {
+			var runner;
+			for (i = 0; i < runners.length; i++) {
+				if (runners[i].getAttribute('state') !== 'busy') {
+					runner = runners[i];
+					break;
+				}
+			}
 			var feature = queue.pop();
+			if (!feature) {
+				return;
+			}
+			
 			var url = '/test' + windowQueryString + '&feature=' + feature;
 			log('['+(runnerCompletedCount+1)+'/'+runnerTotalCount+'] Testing <a target="runner" href="'+url+'">'+feature+'</a>...');
 			runner.src = url;
+			runner.setAttribute('featureList', feature);
+			runner.setAttribute('state', 'busy');
 			timer = setTimeout(function() {
 				receiveTestResults([feature]);
 			}, timeout);
 		}
-        function postResult(featureName, result) {
-            if (window.top !== this && parent && 'receiveTestResult' in parent) {
-                parent.receiveTestResult(featureName, result, '{{{mode}}}');
-            } else if (window.top !== this && parent && 'postMessage' in parent && 'JSON' in window) {
-                parent.postMessage(JSON.stringify({featureName:featureName, result:result, mode:'{{{mode}}}'}), '*');
-            }
-        }
+
+		function postResult(featureName, result) {
+				if (window.top !== this && parent && 'receiveTestResult' in parent) {
+						parent.receiveTestResult(featureName, result, '{{{mode}}}');
+				} else if (window.top !== this && parent && 'postMessage' in parent && 'JSON' in window) {
+						parent.postMessage(JSON.stringify({featureName:featureName, result:result, mode:'{{{mode}}}'}), '*');
+				}
+		}
+
 		function receiveTestResults(featureList, results) {
+			for (i = 0; i < runners.length; i++) {
+				if (runners[i].getAttribute('featureList') === featureList.join(',')) {
+					runners[i].setAttribute('state', 'done');
+				}
+			}
+
 			var resultsummary = [], featureName;
 			clearTimeout(timer);
 			if (!results) {
@@ -72,7 +102,7 @@
 					globalresults.total++;
 					for (var i=0,s=featureList.length; i<s; i++) {
 						globalresults.failingSuites[featureList[i]+' (timeout after '+timeout+'ms, '+timeoutMaxRetries+' retries)'] = true;
-                        postResult(featureList[i], 'timeout');
+						postResult(featureList[i], 'timeout');
 					}
 					resultsummary.push('No more retries left');
 				}
@@ -92,19 +122,28 @@
 					}
 				}
 				if (results.testedSuites) {
-                    for (var t in results.testedSuites) {
-                    	featureName = results.testedSuites[t];
+					for (var t in results.testedSuites) {
+						featureName = results.testedSuites[t];
 						postResult(featureName, (results.failingSuites && featureName in results.failingSuites) ? 'fail' : 'pass');
 					}
-                }
+				}
 				timeoutRetryCount = 0;
 				if (results.passed) resultsummary.push('<span class="pass">'+results.passed+' pass</span>');
 				if (results.failed) resultsummary.push('<span class="fail">'+results.failed+' fail</span>');
 				if (!resultsummary.length) resultsummary.push('No tests to run');
 			}
+
 			log(resultsummary.join(', ') + ' ('+featureList.join(', ')+')');
 			runnerCompletedCount = runnerTotalCount - queue.length;
+
 			if (!queue.length) {
+				for (i = 0; i < runners.length; i++) {
+					if (runners[i].getAttribute('state') === 'busy') {
+						// other runners still busy
+						return;
+					}
+				}
+
 				globalresults.state = 'complete';
 				globalresults.runnerCount = runnerTotalCount;
 				window.global_test_results = window.global_test_progress = globalresults;
@@ -118,6 +157,7 @@
 				executeTest();
 			}
 		}
+
 		function log(str) {
 			var t = new Date();
 			var el = document.getElementById('log');
@@ -126,10 +166,14 @@
 			el.appendChild(p);
 			el.scrollTop = 99999999;
 		}
+		
 	</script>
 </head>
 <body>
-	<iframe name='runner' id='runner' frameborder='0'></iframe>
+	<iframe name='runner' id='runner-a' frameborder='0'></iframe>
+	<iframe name='runner' id='runner-b' frameborder='0'></iframe>
+	<iframe name='runner' id='runner-c' frameborder='0'></iframe>
+	<iframe name='runner' id='runner-d' frameborder='0'></iframe>
 	<div id='log'></div>
 </body>
 </html>
