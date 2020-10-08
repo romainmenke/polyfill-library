@@ -16,7 +16,7 @@
 	</style>
 
 	<script>
-		var runners, timers;
+		var runners, timer;
 		var globalresults = {
 			passed: 0,
 			failed: 0,
@@ -41,7 +41,6 @@
 				document.getElementById('runner-c'),
 				document.getElementById('runner-d')
 			];
-			timers = {};
 			if (queue.length) {
 				for (i = 0; i < runners.length; i++) {
 					setTimeout(function() {
@@ -70,7 +69,7 @@
 			runner.src = url;
 			runner.setAttribute('featureList', feature);
 			runner.setAttribute('state', 'busy');
-			timers[runner.id] = setTimeout(function() {
+			timer = setTimeout(function() {
 				receiveTestResults([feature]);
 			}, timeout);
 		}
@@ -84,11 +83,9 @@
 		}
 
 		function receiveTestResults(featureList, results) {
-			var timer;
 			for (i = 0; i < runners.length; i++) {
 				if (runners[i].getAttribute('featureList') === featureList.join(',')) {
 					runners[i].setAttribute('state', 'done');
-					timer = timers[runners[i].id];
 				}
 			}
 
