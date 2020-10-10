@@ -106,17 +106,17 @@ describe('File : WPT', function () {
 	});
 
 	// Blob polyfill doesn't handle these
-	// it("propagates exceptions", function () {
-	// 	var to_string_throws = {
-	// 		toString: function () {
-	// 			throw new Error('expected');
-	// 		}
-	// 	};
+	it("propagates exceptions", function () {
+		var to_string_throws = {
+			toString: function () {
+				throw new Error('expected');
+			}
+		};
 		
-	// 	proclaim["throws"](function () {
-	// 		new File([to_string_throws], 'name.txt');
-	// 	});
-	// });
+		proclaim["throws"](function () {
+			new File([to_string_throws], 'name.txt');
+		});
+	});
 
 	function test_first_argument(arg1, expectedSize, testName) {
 		it("works when first argument is : " + testName, function () {
@@ -138,11 +138,9 @@ describe('File : WPT', function () {
 	test_first_argument([new File(["bits"], 'world.txt')], 4, "File fileBits");
 	test_first_argument(["bits", new Blob(["bits"]), new Blob(), new File(["bits"], 'world.txt')], 12, "Various fileBits");
 	
-	// IE with native Blob does not support these
+	// IE Native Blob can't handle these cases
 	// test_first_argument([12], 2, "Number in fileBits");
-	// test_first_argument([
-	// 	[1, 2, 3]
-	// ], 5, "Array in fileBits");
+	// test_first_argument([[1, 2, 3]], 5, "Array in fileBits");
 	// test_first_argument([{}], 15, "Object in fileBits"); // "[object Object]"
 
 	// var to_string_obj = {
@@ -151,7 +149,6 @@ describe('File : WPT', function () {
 	// 	}
 	// };
 	// test_first_argument([to_string_obj], 8, "Object with toString in fileBits");
-	// IE with native Blob does not support these
 
 	function test_second_argument(arg2, expectedFileName, testName) {
 		it("works when second argument is : " + testName, function () {
@@ -179,12 +176,11 @@ describe('File : WPT', function () {
 	test_third_argument('text/plain', 'text/plain');
 	test_third_argument('nonparsable', 'nonparsable');
 
-	// Blob polyfill doesn't handle these case :
-	// test_third_argument('text/plain;charset=UTF-8', 'text/plain;charset=utf-8');
-	// test_third_argument('TEXT/PLAIN', 'text/plain');
-	// test_third_argument('𝓽𝓮𝔁𝓽/𝔭𝔩𝔞𝔦𝔫', '');
-	// test_third_argument('ascii/nonprintable\u001F', '');
-	// test_third_argument('ascii/nonprintable\u007F', '');
-	// test_third_argument('nonascii\u00EE', '');
-	// test_third_argument('nonascii\u1234', '');
+	test_third_argument('text/plain;charset=UTF-8', 'text/plain;charset=utf-8');
+	test_third_argument('TEXT/PLAIN', 'text/plain');
+	test_third_argument('𝓽𝓮𝔁𝓽/𝔭𝔩𝔞𝔦𝔫', '');
+	test_third_argument('ascii/nonprintable\u001F', '');
+	test_third_argument('ascii/nonprintable\u007F', '');
+	test_third_argument('nonascii\u00EE', '');
+	test_third_argument('nonascii\u1234', '');
 });

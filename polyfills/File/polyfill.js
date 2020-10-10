@@ -68,9 +68,26 @@
             n = fileName.toString();
         }
 
+        // ensure we propagate throwing toString methods.
+        // Blob polyfill doesn't do this.
+        (function () {
+            if (fileBits.length) {
+                for (var i = 0; i < fileBits.length; i++) {
+                    var bit = fileBits[i];
+                    if ((bit.toString) && (typeof bit.toString === 'function')) {
+                        bit.toString();
+                    }
+                }
+            }
+        }());
+
         var options;
         if (arguments.length > 2) {
             options = arguments[2];
+        }
+
+        if (options && options.type) {
+            options.type = mimeTypeParse(options.type);
         }
 
         if (_hasNativeFileWithWorkingConstructor) {
@@ -160,5 +177,179 @@
         });
     } catch (e) {
         // noop
+    }
+
+    function asciiLowercase(string) {
+        return string.replace(/[A-Z]/g, function (l) {
+            return l.toLowerCase();
+        });
+    }
+
+    // This variant only implements it with the extract-value flag set.
+    function collectAnHTTPQuotedString(input, position) {
+        var value = "";
+
+        position++;
+
+        while (true) {
+            while (position < input.length && input[position] !== "\"" && input[position] !== "\\") {
+                value += input[position];
+                ++position;
+            }
+
+            if (position >= input.length) {
+                break;
+            }
+
+            var quoteOrBackslash = input[position];
+            ++position;
+
+            if (quoteOrBackslash === "\\") {
+                if (position >= input.length) {
+                    value += "\\";
+                    break;
+                }
+
+                value += input[position];
+                ++position;
+            } else {
+                break;
+            }
+        }
+
+        return [value, position];
+    }
+
+    function mimeTypeParse(input) {
+        input = input.replace(/^[ \t\n\r]+/, "").replace(/[ \t\n\r]+$/, "");
+
+        var position = 0;
+        var type = "";
+        while (position < input.length && input[position] !== "/") {
+            type += input[position];
+            ++position;
+        }
+
+        if (type.length === 0 || !(/^[-!#$%&'*+.^_`|~A-Za-z0-9]*$/.test(type))) {
+            return '';
+        }
+
+        if (position >= input.length) {
+            return mimeTypeSerializer({
+                type: asciiLowercase(type),
+                subtype: '',
+                parameters: {}
+            });
+        }
+
+        // Skips past "/"
+        ++position;
+
+        var subtype = "";
+        while (position < input.length && input[position] !== ";") {
+            subtype += input[position];
+            ++position;
+        }
+
+        subtype = subtype.replace(/[ \t\n\r]+$/, "");
+
+        if (subtype.length === 0 || !(/^[-!#$%&'*+.^_`|~A-Za-z0-9]*$/.test(subtype))) {
+            return '';
+        }
+
+        var mimeType = {
+            type: asciiLowercase(type),
+            subtype: asciiLowercase(subtype),
+            parameters: {}
+        };
+
+        while (position < input.length) {
+            // Skip past ";"
+            ++position;
+
+            while (input[position] === " " || input[position] === "\t" || input[position] === "\n" || input[position] === "\r") {
+                ++position;
+            }
+
+            var parameterName = "";
+            while (position < input.length && input[position] !== ";" && input[position] !== "=") {
+                parameterName += input[position];
+                ++position;
+            }
+            parameterName = asciiLowercase(parameterName);
+
+            if (position < input.length) {
+                if (input[position] === ";") {
+                    continue;
+                }
+
+                // Skip past "="
+                ++position;
+            }
+
+            var parameterValue = null;
+            if (input[position] === "\"") {
+                var httpQuotedString = collectAnHTTPQuotedString(input, position);
+                parameterValue = httpQuotedString[0];
+                position = httpQuotedString[1];
+
+                while (position < input.length && input[position] !== ";") {
+                    ++position;
+                }
+            } else {
+                parameterValue = "";
+                while (position < input.length && input[position] !== ";") {
+                    parameterValue += input[position];
+                    ++position;
+                }
+
+                parameterValue = parameterValue.replace(/[ \t\n\r]+$/, "");
+
+                if (parameterValue === "") {
+                    continue;
+                }
+            }
+
+            if (parameterName.length > 0 &&
+                (/^[-!#$%&'*+.^_`|~A-Za-z0-9]*$/.test(parameterName)) &&
+                /^[\t\u0020-\u007E\u0080-\u00FF]*$/.test(parameterValue) &&
+                !mimeType.parameters[parameterName]) {
+                mimeType.parameters[parameterName] = asciiLowercase(parameterValue);
+            }
+        }
+
+        return mimeTypeSerializer(mimeType);
+    }
+
+    function mimeTypeSerializer(mimeType) {
+        if (!mimeType) {
+            return '';
+        }
+
+        if (!mimeType.subtype) {
+            return mimeType.type;
+        }
+        
+        var serialization = mimeType.type + '/' + mimeType.subtype;
+
+        if (mimeType.parameters.size === 0) {
+            return serialization;
+        }
+
+        for (var name in mimeType.parameters) {
+            var value = mimeType.parameters[name];
+            serialization += ";";
+            serialization += name;
+            serialization += "=";
+
+            if (!(/^[-!#$%&'*+.^_`|~A-Za-z0-9]*$/.test(value)) || value.length === 0) {
+                value = value.replace(/(["\\])/g, "\\$1");
+                value = '"' + value + '"';
+            }
+
+            serialization += value;
+        }
+
+        return serialization;
     }
 }(self));
