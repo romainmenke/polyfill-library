@@ -30,11 +30,7 @@ jobs:
       with:
         node-version: 12.x
     - run: |
-          echo "$GOPATH"
-    - run: |
-          echo "$GOPATH"
-          go get -u github.com/romainmenke/polyfill-library-buildsources
-          polyfill-library-buildsources
+          sh ./tasks/polyfill-library-buildsources
     - name: Test on ie
       run: node ./test/polyfills/server.js & node ./test/polyfills/remotetest.js targeted director browser=ie
       env:
