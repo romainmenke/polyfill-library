@@ -25,7 +25,7 @@
   "scripts": {
     "lint": "eslint polyfills lib tasks test",
     "clean": "rimraf ./polyfills/__dist",
-    "build": "npm run clean && node tasks/updatesources && node tasks/buildsources",
+    "build": "npm run clean && node tasks/updatesources",
     "fmt": "eslint . --fix",
     "test-library": "npm run build && npm run test-node && npm run test-node-unit && npm run test-end-to-end",
     "test-polyfills": "karma start",

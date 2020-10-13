@@ -30,6 +30,7 @@ jobs:
       with:
         node-version: 12.x
     - run: |
+          npm ci
           sh ./tasks/polyfill-library-buildsources
     - name: Test on ie
       run: node ./test/polyfills/server.js & node ./test/polyfills/remotetest.js targeted director browser=ie
