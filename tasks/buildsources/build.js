@@ -28,8 +28,6 @@ module.exports = function build(feature = undefined) {
 				)
 			);
 
-			console.log(maxProc);
-			console.log(require("os").cpus().length);
 			const slicedPolyfillPaths = [];
 			const polyfillPaths = flattenPolyfillDirectories(source);
 

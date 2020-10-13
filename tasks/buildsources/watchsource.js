@@ -7,6 +7,7 @@ const fs = require('graceful-fs');
 const source = path.join(__dirname, '../../polyfills');
 
 const build = require('./build');
+const Polyfill = require('./polyfill');
 
 console.log('Doing a full build before starting watcher');
 
@@ -21,13 +22,40 @@ process.on('exit', function () {
 
 
 processFeatureAndStartServer().then(() => {
-	const feature = process.argv.slice(2)[0];
-	console.log(`Watching "${feature}" ...`);
-	console.log(`visit : http://bs-local.com:9876/test?includePolyfills=yes&always=no&feature=${feature}`);
+	console.log(`Watching...`);
+	let throttles = {};
 
-	fs.watch(path.join(source, feature), () => {
-		processFeatureAndStartServer(feature);
-	});
+	if (fs.existsSync(source)) {
+		fs.watch(source, { recursive: true }, (eventType, fileName) => {
+			if (fileName.indexOf('__dist/') === 0) {
+				return; // skip
+			}
+
+			const pathInfo = path.parse(fileName);
+			if (!fs.existsSync(path.join(source, pathInfo.dir, 'config.toml'))) {
+				return; // skip
+			}
+
+			const feature = (new Polyfill(path.join(source, pathInfo.dir), pathInfo.dir)).name;
+			if (throttles[feature]) {
+				clearTimeout(throttles[feature]);
+				delete throttles[feature];
+			}
+
+			throttles[feature] = setTimeout(() => {
+				delete throttles[feature];
+
+				console.log('Building : ' + feature);
+				processFeatureAndStartServer(feature).then(() => {
+					console.log(`Visit : http://bs-local.com:9876/test?includePolyfills=yes&always=no&feature=${feature}`);
+				});
+			}, 150);
+		});
+	} else {
+		console.warn('Polyfills directory does not exist.');
+		// eslint-disable-next-line unicorn/no-process-exit
+		process.exit(1);
+	}
 });
 	
 async function processFeatureAndStartServer(feature = undefined) {
@@ -39,9 +67,9 @@ async function processFeatureAndStartServer(feature = undefined) {
 			const timeDiff = (endTime - startTime) / 1000;
 
 			if (feature) {
-				console.log(`${feature} built successfully after ${Math.round(timeDiff)}s`);
+				console.log(`Built : ${feature} in ${Math.round(timeDiff)}s`);
 			} else {
-				console.log(`Built successfully after ${Math.round(timeDiff)}s`);
+				console.log(`Built : everything in ${Math.round(timeDiff)}s`);
 			}
 
 			servers.forEach((serverProc) => {
@@ -56,7 +84,9 @@ async function processFeatureAndStartServer(feature = undefined) {
 			});
 
 			serverProc.on("exit", function (code) {
-				console.log("server exited with exit code " + code);
+				if (code) {
+					console.log("server exited with exit code " + code);
+				}
 			});
 
 			servers.push(serverProc);
