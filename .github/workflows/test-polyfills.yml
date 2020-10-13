@@ -29,7 +29,9 @@ jobs:
     - uses: actions/setup-node@v2.1.2
       with:
         node-version: 12.x
-    - run: npm ci
+    - run: |
+          go get -u github.com/romainmenke/polyfill-library-buildsources
+          polyfill-library-buildsources
     - name: Test on ie
       run: node ./test/polyfills/server.js & node ./test/polyfills/remotetest.js targeted director browser=ie
       env:
