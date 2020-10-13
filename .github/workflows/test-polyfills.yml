@@ -46,7 +46,10 @@ jobs:
     - uses: actions/setup-node@v2.1.2
       with:
         node-version: 12.x
-    - run: npm ci
+    - run: |
+          npm ci
+          chmod +x ./tasks/polyfill-library-buildsources
+          ./tasks/polyfill-library-buildsources
     - name: Test on android
       run: node ./test/polyfills/server.js & node ./test/polyfills/remotetest.js targeted director browser=android
       env:
@@ -60,7 +63,10 @@ jobs:
     - uses: actions/setup-node@v2.1.2
       with:
         node-version: 12.x
-    - run: npm ci
+    - run: |
+          npm ci
+          chmod +x ./tasks/polyfill-library-buildsources
+          ./tasks/polyfill-library-buildsources
     - name: Test on chrome
       run: node ./test/polyfills/server.js & node ./test/polyfills/remotetest.js targeted director browser=chrome
       env:
@@ -74,7 +80,10 @@ jobs:
     - uses: actions/setup-node@v2.1.2
       with:
         node-version: 12.x
-    - run: npm ci
+    - run: |
+          npm ci
+          chmod +x ./tasks/polyfill-library-buildsources
+          ./tasks/polyfill-library-buildsources
     - name: Test on edge
       run: node ./test/polyfills/server.js & node ./test/polyfills/remotetest.js targeted director browser=edge
       env:
@@ -88,7 +97,10 @@ jobs:
     - uses: actions/setup-node@v2.1.2
       with:
         node-version: 12.x
-    - run: npm ci
+    - run: |
+          npm ci
+          chmod +x ./tasks/polyfill-library-buildsources
+          ./tasks/polyfill-library-buildsources
     - name: Test on firefox
       run: node ./test/polyfills/server.js & node ./test/polyfills/remotetest.js targeted director browser=firefox
       env:
@@ -102,7 +114,10 @@ jobs:
     - uses: actions/setup-node@v2.1.2
       with:
         node-version: 12.x
-    - run: npm ci
+    - run: |
+          npm ci
+          chmod +x ./tasks/polyfill-library-buildsources
+          ./tasks/polyfill-library-buildsources
     - name: Test on ios
       run: node ./test/polyfills/server.js & node ./test/polyfills/remotetest.js targeted director browser=ios
       env:
@@ -116,7 +131,10 @@ jobs:
     - uses: actions/setup-node@v2.1.2
       with:
         node-version: 12.x
-    - run: npm ci
+    - run: |
+          npm ci
+          chmod +x ./tasks/polyfill-library-buildsources
+          ./tasks/polyfill-library-buildsources
     - name: Test on safari
       run: node ./test/polyfills/server.js & node ./test/polyfills/remotetest.js targeted director browser=safari
       env:
