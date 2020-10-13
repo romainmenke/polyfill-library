@@ -13,6 +13,12 @@ const checkForCircularDependencies = require('./check-for-circular-dependencies'
 const flattenPolyfillDirectories = require('./flatten-polyfill-directories');
 const writeAliasFile = require('./write-alias-file');
 
+/**
+ * Build all or a single polyfill.
+ * 
+ * @param {string|undefined} feature An optional feature to build. When omitted all polyfills will be build.
+ * @returns {Promise<void>} When done.
+ */
 module.exports = function build(feature = undefined) {
 	return Promise.resolve()
 		.then(async () => {

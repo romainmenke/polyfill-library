@@ -8,6 +8,14 @@ const {
 
 const writeFile = promisify(fs.writeFile);
 
+/**
+ * Write "aliases.json" to the output directory.
+ * 
+ * @param {Array<Polyfill>} polyfills list of polyfills
+ * @param {string} directory output directory location
+ * 
+ * @throws When writing a valid JSON to the output directory fails.
+ */
 module.exports = function writeAliasFile(polyfills, directory) {
 	const aliases = {};
 

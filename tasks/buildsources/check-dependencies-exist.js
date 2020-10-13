@@ -1,5 +1,11 @@
 'use strict';
 
+/**
+ * Validate the depedency graph for a list of polyfills.
+ * 
+ * @param {Array<Polyfill>} polyfills The list of polyfills.
+ * @throws When a dependency is missing.
+ */
 module.exports = function checkDependenciesExist(polyfills) {
 	for (const polyfill of polyfills) {
 		for (const dependency of polyfill.dependencies) {

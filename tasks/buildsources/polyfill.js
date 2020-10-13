@@ -16,7 +16,16 @@ const readFile = promisify(fs.readFile);
 
 const validateSource = require('./validate-source');
 
+/**
+ * Polyfill represents a single polyfill directory.
+ */
 module.exports = class Polyfill {
+
+	/**
+	 * new Polyfill
+	 * @param  {string} absolute Path to polyfill.
+	 * @param  {string} relative Path to polyfill.
+	 */
 	constructor(absolute, relative) {
 		this.path = {
 			absolute,
@@ -27,6 +36,13 @@ module.exports = class Polyfill {
 		this.sources = {};
 	}
 
+	/**
+	 * Construct a Polyfill from JSON data.
+	 * 
+	 * @param {any} data JSON data representing a Polyfill.
+	 * 
+	 * @returns {Polyfill|undefined} A Polyfill or undefined when data is invalid.
+	 */
 	static fromJSON(data) {
 		if (!data) {
 			return;
@@ -45,38 +61,82 @@ module.exports = class Polyfill {
 		return polyfill;
 	}
 
+	/**
+	 *  Aliases for the Polyfill.
+	 * 
+	 * @type {Array<string>}
+	 */
 	get aliases() {
 		return ['all'].concat(this.config.aliases || []);
 	}
 
+	/**
+	 * Depedencies for the Polyfill.
+	 * 
+	 * @type {Array<string>}
+	 */
 	get dependencies() {
 		return this.config.dependencies || [];
 	}
 
+	/**
+	 * Path to "config.toml".
+	 * 
+	 * @type {string}
+	 */
 	get configPath() {
 		return path.join(this.path.absolute, 'config.toml');
 	}
 
+	/**
+	 * Path to "detect.js".
+	 * 
+	 * @type {string}
+	 */
 	get detectPath() {
 		return path.join(this.path.absolute, 'detect.js');
 	}
 
+	/**
+	 * Path to "polyfill.js".
+	 * 
+	 * @type {string}
+	 */
 	get sourcePath() {
 		return path.join(this.path.absolute, 'polyfill.js');
 	}
 
+	/**
+	 * Path to "tests.js".
+	 * 
+	 * @type {string}
+	 */
 	get testsPath() {
 		return path.join(this.path.absolute, 'tests.js');
 	}
 
+	/**
+	 * True when a "config.toml" file exists.
+	 * 
+	 * @type {boolean}
+	 */
 	get hasConfigFile() {
 		return fs.existsSync(this.configPath);
 	}
 
+	/**
+	 * Update internal config after handling source files.
+	 */
 	updateConfig() {
 		this.config.size = this.sources.min.length;
 	}
 
+	/**
+	 * Load config for Polyfill.
+	 * Call this before doing any work with the Polyfill.
+	 * 
+	 * @throws When the Polyfill has missing or invalid config.
+	 */
 	loadConfig() {
 		return readFile(this.configPath)
 			.catch(error => {
@@ -112,6 +172,11 @@ module.exports = class Polyfill {
 			});
 	}
 
+	/**
+	 * Check if the Polyfill has a License that allows it to be part of polyfill-library.
+	 * 
+	 * @throws When the License isn't ok.
+	 */
 	checkLicense() {
 		if ('license' in this.config) {
 			const license = spdxLicenses.spdx(this.config.license);
@@ -128,6 +193,11 @@ module.exports = class Polyfill {
 		}
 	}
 
+	/**
+	 * Load "detect.js" if it exists and validate.
+	 * 
+	 * @throws When "detect.js" exists but isn't valid.
+	 */
 	loadDetect() {
 		if (fs.existsSync(this.detectPath)) {
 			this.config.detectSource = fs.readFileSync(this.detectPath, 'utf8').replace(/\s*$/, '') || '';
@@ -136,6 +206,12 @@ module.exports = class Polyfill {
 		}
 	}
 
+	/**
+	 * Load "polyfill.js", minify, validate and remove source maps.
+	 * 
+	 * @throws When "polyfill.js" doesn't exists or isn't valid.
+	 * @returns {Promise<void>} When done.
+	 */
 	loadSources() {
 		return readFile(this.sourcePath, 'utf8')
 			.catch(error => {
@@ -158,6 +234,13 @@ module.exports = class Polyfill {
 			});
 	}
 
+	/**
+	 * Minify "polyfill.js" and validate.
+	 * 
+	 * @param {string} source Code found in "polyfill.js".
+	 * @throws When "polyfill.js" is invalid.
+	 * @returns {{raw: string, min: string}}
+	 */
 	minifyPolyfill(source) {
 		const raw = `\n// ${this.name}\n${source}`;
 
@@ -194,6 +277,13 @@ module.exports = class Polyfill {
 		}
 	}
 
+	/**
+	 * Minify "detect.js" and validate.
+	 * 
+	 * @param {string} source Code found in "detect.js".
+	 * @throws When "detect.js" is invalid.
+	 * @returns {{raw: string, min: string}}
+	 */
 	minifyDetect(source) {
 		const raw = `\n// ${this.name}\n${source}`;
 
@@ -232,6 +322,12 @@ module.exports = class Polyfill {
 		}
 	}
 
+	/**
+	 * Remove source maps from source code.
+	 * 
+	 * @param {{raw: string, min: string}} source JS source code.
+	 * @returns {{raw: string, min: string}} Cleaned source code.
+	 */
 	removeSourceMaps(source) {
 		const re = /^\/\/#\ssourceMappingURL(.+)$/gm;
 
@@ -241,6 +337,12 @@ module.exports = class Polyfill {
 		};
 	}
 
+	/**
+	 * Write processed files to the output directory.
+	 * 
+	 * @param {string} root The output directory.
+	 * @returns {Promise<void>} When done.
+	 */
 	writeOutput(root) {
 		const destination = path.join(root, this.name);
 		const files = [

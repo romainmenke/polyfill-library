@@ -3,9 +3,14 @@
 const fs = require('graceful-fs');
 const path = require('path');
 
+/**
+ * Recursively discover all subfolders and produce a flattened list.
+ * Directories prefixed with '__' are not polyfill features and are not included.
+ * 
+ * @param {string} directory Directory to flatten.
+ * @returns {Array<string>} Flattened directory.
+ */
 module.exports = function flattenPolyfillDirectories(directory) {
-	// Recursively discover all subfolders and produce a flattened list.
-	// Directories prefixed with '__' are not polyfill features and are not included.
 	let results = [];
 	for (const item of fs.readdirSync(directory)) {
 		const joined = path.join(directory, item);

@@ -2,6 +2,12 @@
 
 const toposort = require('toposort');
 
+/**
+ * Validate the depedency graph for a list of polyfills.
+ * 
+ * @param {Array<Polyfill>} polyfills The list of polyfills.
+ * @throws When there is a circular dependency.
+ */
 module.exports = function checkForCircularDependencies(polyfills) {
 	const graph = [];
 

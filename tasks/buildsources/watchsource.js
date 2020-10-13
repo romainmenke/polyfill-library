@@ -11,8 +11,10 @@ const Polyfill = require('./polyfill');
 
 console.log('Doing a full build before starting watcher');
 
+// Keep a list of started test servers.
 let servers = [];
 
+// Kill all servers when exiting.
 process.on('exit', function () {
 	servers.forEach((serverProc) => {
 		serverProc.stdin.pause();
@@ -58,6 +60,12 @@ processFeatureAndStartServer().then(() => {
 	}
 });
 	
+/**
+ * Build all or a single polyfill and (re)start the test server.
+ * 
+ * @param {string|undefined} feature An optional feature to build. When omitted all polyfills will be build.
+ * @returns {Promise<void>} When done.
+ */
 async function processFeatureAndStartServer(feature = undefined) {
 	const startTime = new Date();
 
