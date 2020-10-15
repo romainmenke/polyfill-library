@@ -1,6 +1,6 @@
-'DocumentFragment' in self && self.DocumentFragment === document.createDocumentFragment().constructor && (function () {
+'DocumentFragment' in self && (function () {
 	try {
-		new self.DocumentFragment();
+		new DocumentFragment();
 		return true;
 	} catch (_) {
 		return false;	

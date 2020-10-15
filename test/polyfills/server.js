@@ -146,7 +146,18 @@ app.get(
     response.set(headers);
 
     const polyfills = await testablePolyfills(isIE8, polyfillio.normalizeUserAgent(ua));
-    const testDetect = polyfills.map(feature => feature.testDetect).join("\n");
+    const testDetect = polyfills.filter((polyfill) => {
+      // "console" has too many quirks in IE to have a reliable detect without false positives/negatives
+      if (polyfill.feature.indexOf('console') === 0) {
+        return false;
+      }
+
+      // "Array.prototype.sort" detect tries to check for stable sorting which has too many browser quirks.
+      if (polyfill.feature === 'Array.prototype.sort') {
+        return false;
+      }
+      return ; 
+    }).map(feature => feature.testDetect).join("\n");
 
     response.send(testDetect);
   }
