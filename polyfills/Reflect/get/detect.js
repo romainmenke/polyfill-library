@@ -1,1 +1,1 @@
-'Reflect' in self && 'get' in self.Reflect
+self.Reflect && 'get' in self.Reflect

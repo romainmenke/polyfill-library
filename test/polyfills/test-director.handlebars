@@ -47,7 +47,7 @@
 			log('[' + (runnerCompletedCount + 1) + '/' + runnerTotalCount + '] Testing <a target="runner" href="' + url + '">Detects</a>...');
 			runner.src = url;
 			timer = setTimeout(function () {
-				receiveTestResults([feature]);
+				receiveTestResults([]);
 			}, timeout);
 		}
 		function executeTest() {

@@ -3,6 +3,6 @@
 		new DocumentFragment();
 		return true;
 	} catch (_) {
-		return false;	
+		return false;
 	}
 }())

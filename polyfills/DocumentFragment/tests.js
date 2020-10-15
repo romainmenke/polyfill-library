@@ -2,10 +2,10 @@
 /* global proclaim */
 
 it('has a working constructor', function () {
-		proclaim.doesNotThrow(function () {
-		new DocumentFragment();
-		});
-	
+	proclaim.doesNotThrow(function () {
+	new DocumentFragment();
+	});
+
 	proclaim.ok(!!(new DocumentFragment()));
 });
 

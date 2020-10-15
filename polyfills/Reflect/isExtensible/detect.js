@@ -1,1 +1,1 @@
-'Reflect' in self && 'isExtensible' in self.Reflect
+self.Reflect && 'isExtensible' in self.Reflect
