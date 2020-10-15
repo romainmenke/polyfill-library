@@ -126,6 +126,33 @@ app.get(
   }
 );
 
+app.get(
+  "/test-detect.js",
+  cacheFor1Day,
+  async (request, response) => {
+    const ua = request.get("User-Agent");
+    const isIE8 = polyfillio.normalizeUserAgent(ua) === "ie/8.0.0";
+    const feature = request.query.feature;
+    const requestedFeature = request.query.feature !== undefined;
+
+    const headers = {
+      "Content-Type": "text/javascript; charset=utf-8"
+    };
+    response.status(200);
+    response.set(headers);
+
+    const polyfills = await testablePolyfills(isIE8, ua);
+
+    // Filter for querystring args
+    const features = requestedFeature
+      ? polyfills.filter(polyfill => feature && feature.split(',').includes(polyfill.feature))
+      : polyfills;
+    const testDetect = features.map(feature => feature.testDetect).join("\n");
+
+    response.send(testDetect);
+  }
+);
+
 app.listen(port, () => console.log(`Test server listening on port ${port}!`));
 
 const testablePolyfillsCache = {};
@@ -163,11 +190,35 @@ async function testablePolyfills(isIE8, ua) {
           }).call(window));
         });
 
+        it('does not have an uncalled IIFE as detect', function() {
+          proclaim["throws"](function () {
+            (${config.detectSource})();
+          });
+        });
+
         ${await readFile(testFile)}
       });`;
+
+      const testDetect = `describe('${polyfill}', function() { 
+        it('fails the feature detect without polyfill', function() {
+          proclaim.ok((function() {
+            return (${config.detectSource}) === false;
+          }).call(window));
+        });
+
+        it('does not have an uncalled IIFE as detect', function() {
+          proclaim["throws"](function () {
+            (${config.detectSource})();
+          });
+        });
+
+        ${await readFile(testFile)}
+      });`;
+
       polyfilldata.push({
         feature: polyfill,
-        testSuite
+        testSuite: testSuite,
+        testDetect: testDetect,
       });
     }
   }
