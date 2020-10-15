@@ -4,6 +4,7 @@ polyfills/Intl/**/detect.js
 polyfills/Intl/**/polyfill.js
 polyfills/Intl/**/~locale
 polyfills/__dist/
+polyfills/~element-qsa-scope/polyfill.js
 polyfills/~html5-elements/polyfill.js
 polyfills/AudioContext/polyfill.js
 polyfills/EventSource/polyfill.js
