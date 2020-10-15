@@ -1,0 +1,40 @@
+#### Aliases
+aliases = [
+  "Element.prototype.querySelector",
+  "Element.prototype.querySelectorAll"
+]
+
+#### Dependencies
+dependencies = [
+	"document.querySelector",
+	"Element"
+]
+
+#### Specification Link
+spec = "https://drafts.csswg.org/selectors-4/#the-scope-pseudo"
+
+#### Documentation Link
+docs = "https://developer.mozilla.org/en-US/docs/Web/CSS/:scope"
+
+#### License
+license = "CC0-1.0"
+
+#### Browser compatibility
+[browsers]
+android = "<38"
+chrome = "<27"
+edge = "<79"
+edge_mob = "*"
+firefox = "<32"
+ios_saf = "<7"
+ie = "*"
+ie_mob = "*"
+opera = "<15"
+op_mini = "*"
+safari = "<7"
+firefox_mob = "<32"
+samsung_mob = "<4"
+
+[install]
+module = "element-qsa-scope"
+paths = [ "index.js" ]
