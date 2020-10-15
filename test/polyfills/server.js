@@ -156,7 +156,8 @@ app.get(
       if (polyfill.feature === 'Array.prototype.sort') {
         return false;
       }
-      return ; 
+      
+      return true; 
     }).map(feature => feature.testDetect).join("\n");
 
     response.send(testDetect);
