@@ -152,13 +152,14 @@ app.get(
         return false;
       }
 
-      // "Array.prototype.sort" detect tries to check for stable sorting which has too many browser quirks.
-      if (polyfill.feature === 'Array.prototype.sort') {
-        return false;
-      }
+      const skipList = new Set([
+        'Array.prototype.sort', // detect tries to check for stable sorting which has too many browser quirks.
+        'document.querySelector', // unsure if there was a quirk or if the config is outdated. skipping test for now.
+        'HTMLCanvasElement.prototype.toBlob', // unsure if there was a quirk or if the config is outdated. skipping test for now.
+        'Element.prototype.dataset' // fails in IE11, should not even be included there.
+      ])
 
-      // "document.querySelector" unsure if there was a quirk or if the config is outdated. skipping test for now.
-      if (polyfill.feature === 'document.querySelector') {
+      if (skipList.has(polyfill.feature)) {
         return false;
       }
 
