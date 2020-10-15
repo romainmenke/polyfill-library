@@ -19,6 +19,11 @@ const runnerTemplate = handlebars.compile(
     encoding: "UTF-8"
   })
 );
+const runnerDetectsTemplate = handlebars.compile(
+  fs.readFileSync(path.join(__dirname, "./test-detects-runner.handlebars"), {
+    encoding: "UTF-8"
+  })
+);
 
 function createPolyfillLibraryConfigFor(features, always) {
   return features.split(",").reduce((config, feature) => {
@@ -52,6 +57,7 @@ const cacheFor1Day = cache("1 day", () => true, {
 });
 
 app.get(["/test"], createEndpoint(runnerTemplate));
+app.get(["/test-detects"], createEndpoint(runnerDetectsTemplate));
 app.get(["/"], createEndpoint(directorTemplate));
 app.get("/mocha.js", cacheFor1Day,(request, response) => {
   response.sendFile(require.resolve("mocha/mocha.js"));
@@ -127,13 +133,11 @@ app.get(
 );
 
 app.get(
-  "/test-detect.js",
+  "/test-detects.js",
   cacheFor1Day,
   async (request, response) => {
     const ua = request.get("User-Agent");
     const isIE8 = polyfillio.normalizeUserAgent(ua) === "ie/8.0.0";
-    const feature = request.query.feature;
-    const requestedFeature = request.query.feature !== undefined;
 
     const headers = {
       "Content-Type": "text/javascript; charset=utf-8"
@@ -141,13 +145,8 @@ app.get(
     response.status(200);
     response.set(headers);
 
-    const polyfills = await testablePolyfills(isIE8, ua);
-
-    // Filter for querystring args
-    const features = requestedFeature
-      ? polyfills.filter(polyfill => feature && feature.split(',').includes(polyfill.feature))
-      : polyfills;
-    const testDetect = features.map(feature => feature.testDetect).join("\n");
+    const polyfills = await testablePolyfills(isIE8, polyfillio.normalizeUserAgent(ua));
+    const testDetect = polyfills.map(feature => feature.testDetect).join("\n");
 
     response.send(testDetect);
   }
@@ -202,7 +201,7 @@ async function testablePolyfills(isIE8, ua) {
       const testDetect = `describe('${polyfill}', function() { 
         it('fails the feature detect without polyfill', function() {
           proclaim.ok((function() {
-            return (${config.detectSource}) === false;
+            return !(${config.detectSource});
           }).call(window));
         });
 
@@ -211,8 +210,6 @@ async function testablePolyfills(isIE8, ua) {
             (${config.detectSource})();
           });
         });
-
-        ${await readFile(testFile)}
       });`;
 
       polyfilldata.push({

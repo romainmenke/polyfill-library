@@ -11,5 +11,5 @@ spec = "http://www.w3.org/TR/selectors-api/"
 docs = "https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector"
 
 [browsers]
-ie = "6 - 8"
+ie = "6 - 7"
 

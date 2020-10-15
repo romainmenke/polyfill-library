@@ -4,6 +4,6 @@ spec = "https://console.spec.whatwg.org"
 docs = "https://developer.mozilla.org/en/docs/Web/API/console"
 
 [browsers]
-ie = "*"
+ie = "<10"
 firefox = "1 - 4"
 

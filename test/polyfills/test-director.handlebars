@@ -37,11 +37,19 @@
 		window.onload = function() {
 			runner = document.getElementById('runner');
 			if (queue.length) {
-				executeTest();
+				executeDetectTest();
 			} else {
 				log('No features to test');
 			}
 		};
+		function executeDetectTest() {
+			var url = '/test-detects';
+			log('[' + (runnerCompletedCount + 1) + '/' + runnerTotalCount + '] Testing <a target="runner" href="' + url + '">Detects</a>...');
+			runner.src = url;
+			timer = setTimeout(function () {
+				receiveTestResults([feature]);
+			}, timeout);
+		}
 		function executeTest() {
 			var feature = queue.pop();
 			var url = '/test' + windowQueryString + '&feature=' + feature;
@@ -51,13 +59,13 @@
 				receiveTestResults([feature]);
 			}, timeout);
 		}
-        function postResult(featureName, result) {
-            if (window.top !== this && parent && 'receiveTestResult' in parent) {
-                parent.receiveTestResult(featureName, result, '{{{mode}}}');
-            } else if (window.top !== this && parent && 'postMessage' in parent && 'JSON' in window) {
-                parent.postMessage(JSON.stringify({featureName:featureName, result:result, mode:'{{{mode}}}'}), '*');
-            }
-        }
+		function postResult(featureName, result) {
+				if (window.top !== this && parent && 'receiveTestResult' in parent) {
+						parent.receiveTestResult(featureName, result, '{{{mode}}}');
+				} else if (window.top !== this && parent && 'postMessage' in parent && 'JSON' in window) {
+						parent.postMessage(JSON.stringify({featureName:featureName, result:result, mode:'{{{mode}}}'}), '*');
+				}
+		}
 		function receiveTestResults(featureList, results) {
 			var resultsummary = [], featureName;
 			clearTimeout(timer);

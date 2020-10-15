@@ -1,1 +1,1 @@
-'construct' in self.Reflect
+'Reflect' in self && 'construct' in self.Reflect
