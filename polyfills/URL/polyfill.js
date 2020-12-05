@@ -392,6 +392,9 @@
         origin: {
           get: function () {
             if ('origin' in instance) return instance.origin;
+            if (this.protocol.toLowerCase() === "data:") {
+              return null
+            }
             return this.protocol + '//' + this.host;
           },
           enumerable: true, configurable: true

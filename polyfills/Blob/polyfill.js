@@ -55,29 +55,11 @@
 		var URL = real_URL;
 		var btoa = view.btoa;
 		var atob = view.atob;
-		var origin = /^[\w-]+:\/*\[?[\w.:-]+\]?(?::[0-9]+)?/;
 		FakeBlob.fake = FB_proto.fake = true;
 		while (file_ex_code--) {
 			FileException.prototype[file_ex_codes[file_ex_code]] = file_ex_code + 1;
 		}
-		// Polyfill URL
-		if (!real_URL.createObjectURL) {
-			URL = view.URL = function (uri) {
-				var
-					uri_info = document.createElementNS("http://www.w3.org/1999/xhtml", "a"),
-					uri_origin;
-				uri_info.href = uri;
-				if (!("origin" in uri_info)) {
-					if (uri_info.protocol.toLowerCase() === "data:") {
-						uri_info.origin = null;
-					} else {
-						uri_origin = uri.match(origin);
-						uri_info.origin = uri_origin && uri_origin[1];
-					}
-				}
-				return uri_info;
-			};
-		}
+
 		URL.createObjectURL = function (blob) {
 			var
 				type = blob.type,
