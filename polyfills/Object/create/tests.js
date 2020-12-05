@@ -190,7 +190,7 @@ describe('Object.create', function () {
 	});
 
 	if ('getPrototypeOf' in Object) {
-		it('can get the prototype of', function () {
+		it.skip('can get the prototype of', function () {
 			function fn() {
 				return this.a = 1;
 			}
