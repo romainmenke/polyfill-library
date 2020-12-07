@@ -1,0 +1,26 @@
+aliases = [ ]
+dependencies = [
+    "Symbol",
+    "Object.defineProperty",
+    "String.prototype.trim",
+    "_ESAbstract.Type"
+]
+license = "MIT"
+spec = "https://tc39.github.io/proposal-Symbol-description/"
+docs = "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/description"
+
+[browsers]
+edge = "12 - 18"
+edge_mob = ">=12"
+safari = "10 - 12"
+chrome = "49 - 69"
+firefox = "18 - 62"
+firefox_mob = "18 - 62"
+ios_saf = "10 - 12.1"
+opera = "36 - 56"
+
+# TODO : set correct ranges for these browsers
+op_mini = "*"
+samsung_mob = "*"
+android = "*"
+bb = "*"
