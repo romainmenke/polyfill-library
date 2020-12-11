@@ -36,13 +36,14 @@ describe('String.prototype.replaceAll', function () {
         });
     }
 
-    context("functional replacer", function() {
-        proclaim.deepStrictEqual('origami'.replaceAll('a', function(search, i, string) {
+    it("works with a functional replacer", function () {
+        var result = 'origami'.replaceAll('a', function (search, i, string) {
             proclaim.deepStrictEqual(search, 'a');
             proclaim.deepStrictEqual(i, 4);
             proclaim.deepStrictEqual(string, 'origami');
             return 'o';
-        }), 'origomi');
+        });
+        proclaim.deepStrictEqual(result, 'origomi');
     });
 
     it("replaces with undefined if replacer is not given", function() {
@@ -58,12 +59,53 @@ describe('String.prototype.replaceAll', function () {
             'origami.origami.origami'.replaceAll(/\./, 'fox');
         }, TypeError);
     });
-    it('works correctly if searchValue is a regex with a global flag', function() {
-        proclaim.deepStrictEqual('origami.origami.origami'.replaceAll(/\./g, 'fox'), 'origamifoxorigamifoxorigami');
-    });
+
+    var supportsRegexpStickyFlag = (function () {
+        // NOTE : figure out why sticky flag isn't supported.
+        try {
+            new RegExp('\\.', 'gy');
+            return true;
+        } catch (_) {
+            return false;
+        }
+    }());
+
+    // NOTE : Polyfill for RegExp.prototype[@@replace] is missing. This polyfill won't work fully as expected untill that polyfill has been implemented.
+    if ('Symbol' in self && 'replace' in self.Symbol && self.RegExp.prototype[self.Symbol.replace]) {
+        it('works correctly if searchValue is a regex with a global flag', function () {
+            proclaim.deepStrictEqual('origami.origami.origami'.replaceAll(/\./g, 'fox'), 'origamifoxorigamifoxorigami');
+        });
+
+        it('works when there is a functional custom replace on RegExp', function () {
+
+            var searchValue = /./g;
+
+            var result = 'aa /./g /./g aa'.replaceAll(searchValue, 'z');
+            proclaim.deepStrictEqual(result, 'zzzzzzzzzzzzzzz');
+
+            if (supportsRegexpStickyFlag) {
+                searchValue = new RegExp('\\.', 'gy');
+
+                result = '. aa /./gy /./gy aa .'.replaceAll(searchValue, 'z');
+                proclaim.deepStrictEqual(result, 'z aa /./gy /./gy aa .');
+            }
+
+            searchValue = /./gi;
+
+            result = 'aa /./gi /./gi aa'.replaceAll(searchValue, 'z');
+            proclaim.deepStrictEqual(result, 'zzzzzzzzzzzzzzzzz');
+
+            if (supportsRegexpStickyFlag) {
+                searchValue = new RegExp('\\.', 'igy');
+
+                result = 'aa /\\./giy /./giy /\\./iyg /\\./gyi /\\./giy aa'.replaceAll(searchValue, 'z');
+                proclaim.deepStrictEqual(result, 'aa /\\./giy /./giy /\\./iyg /\\./gyi /\\./giy aa');
+            }
+        });
+    }
 
     if ('Symbol' in self && 'replace' in self.Symbol) {
-        it('works when there is no functional custom replace', function() {
+        it('works when there is no functional custom replace on RegExp', function () {
 
             var searchValue = /./g;
 
@@ -72,26 +114,40 @@ describe('String.prototype.replaceAll', function () {
             var result = 'aa /./g /./g aa'.replaceAll(searchValue, 'z');
             proclaim.deepStrictEqual(result, 'aa z z aa');
 
-            searchValue = new RegExp('\\.', 'gy');
+            if (supportsRegexpStickyFlag) {
+                searchValue = new RegExp('\\.', 'gy');
 
-            Object.defineProperty(searchValue, self.Symbol.replace, { value: undefined });
+                Object.defineProperty(searchValue, self.Symbol.replace, { value: undefined });
 
-            result = 'aa /./gy /./gy aa'.replaceAll(searchValue, 'z');
-            proclaim.deepStrictEqual(result, 'aa z z aa');
+                result = 'aa /\\./gy /\\./gy aa'.replaceAll(searchValue, 'z');
+                proclaim.deepStrictEqual(result, 'aa z z aa');
+            }
 
-            searchValue = /./gi;
+            // IE8 reorders flags when converting a RegExp to string.
+            if ((/./gi).toString() === "/./ig") {
+                searchValue = /./gi;
 
-            Object.defineProperty(searchValue, self.Symbol.replace, { value: undefined });
+                Object.defineProperty(searchValue, self.Symbol.replace, { value: undefined });
 
-            result = 'aa /./gi /./gi aa'.replaceAll(searchValue, 'z');
-            proclaim.deepStrictEqual(result, 'aa z z aa');
+                result = 'aa /./ig /./ig aa'.replaceAll(searchValue, 'z');
+                proclaim.deepStrictEqual(result, 'aa z z aa');
+            } else {
+                searchValue = /./gi;
 
-            searchValue = new RegExp('\\.', 'igy');
+                Object.defineProperty(searchValue, self.Symbol.replace, { value: undefined });
 
-            Object.defineProperty(searchValue, self.Symbol.replace, { value: undefined });
+                result = 'aa /./gi /./gi aa'.replaceAll(searchValue, 'z');
+                proclaim.deepStrictEqual(result, 'aa z z aa');
+            }
 
-            result = 'aa /./giy /./iyg /./gyi /./giy aa'.replaceAll(searchValue, 'z');
-            proclaim.deepStrictEqual(result, 'aa z /./iyg /./gyi z aa');
+            if (supportsRegexpStickyFlag) {
+                searchValue = new RegExp('\\.', 'igy');
+
+                Object.defineProperty(searchValue, self.Symbol.replace, { value: undefined });
+
+                result = 'aa /\\./giy /./giy /\\./iyg /\\./gyi /\\./giy aa'.replaceAll(searchValue, 'z');
+                proclaim.deepStrictEqual(result, 'aa z /./giy /\\./iyg /\\./gyi z aa');
+            }
         });
     }
 });
