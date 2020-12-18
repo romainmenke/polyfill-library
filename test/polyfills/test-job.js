@@ -116,8 +116,8 @@ module.exports = class TestJob {
        */
       if (error.message.includes("There was an error. Please try again.") && this.runCount < 3) {
         this.runCount += 1;
-        this.setState("waiting 30 seconds to retry");
-        await wait(30 * 1000);
+        this.setState(`waiting ${30 * (2 * this.runCount)} seconds to retry`);
+        await wait(30 * (2 * this.runCount));
         this.setState(`retrying browser -- attempt ${this.runCount}`);
         return this.run();
       } else {
