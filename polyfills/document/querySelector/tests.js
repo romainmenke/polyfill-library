@@ -25,6 +25,15 @@ it('matches element by class', function () {
 	proclaim.equal(document.querySelector('.bar'), element);
 });
 
+it('matches element by attribute', function () {
+	var element = document.body.appendChild(document.createElement('p'));
+
+	element.setAttribute('foo', 'bar qux');
+
+	proclaim.equal(document.querySelector('[foo]'), element);
+	proclaim.equal(document.querySelector('[foo="bar qux"]'), element);
+});
+
 /*
  * Skipped: I don't believe it's possible to determine reliably whether the CSS engine
  * was able to parse the selector, so some browsers will return false for an invalid
