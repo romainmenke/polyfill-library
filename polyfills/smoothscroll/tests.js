@@ -2,7 +2,6 @@
 /* global proclaim */
 
 describe('scroll', function () {
-    // TODO : remove this comment
     it('is defined as a function on window', function () {
         proclaim.isTypeOf(window.scroll, 'function');
     });
