@@ -75,6 +75,12 @@ async function main() {
       return true;
     });
 
+  if (browsers.length === 0) {
+    console.log("nothing to test");
+    // eslint-disable-next-line unicorn/no-process-exit
+    process.exit(0);
+  }
+  
   console.log({ browsers });
 
   const useragentToBrowserObject = browserWithVersion => {
