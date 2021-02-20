@@ -11,12 +11,11 @@ module.exports = function modifiedPolyfillsWithTests() {
 		const modified = {
 			polyfills: {},
 			hasOtherChanges: false,
-			hasManyPolyfillChanges: false,
-			hasNoObservableChanges: true,
+			hasManyPolyfillChanges: false
 		};
 
 		const currentBranch = process.env.GITHUB_REF || 'HEAD'
-		const baseBranch = 'master'; //'origin/master';
+		const baseBranch = 'origin/master';
 
 		exec(`git --no-pager diff --name-only ${currentBranch} $(git merge-base ${currentBranch} ${baseBranch})`, (error, stdout, stderr) => {
 			if (error) {
@@ -131,12 +130,17 @@ module.exports = function modifiedPolyfillsWithTests() {
 		return modified;
 	}).then((modified) => {
 		if (modified.hasOtherChanges) {
-			modified.hasNoObservableChanges = false;
+			modified.testEverything = true;
 			return modified;
 		}
 
-		if (modified.needsTesting && Object.keys(modified.needsTesting).length > 0) {
-			modified.hasNoObservableChanges = false;
+		if (modified.hasManyPolyfillChanges) {
+			modified.testEverything = true;
+			return modified;
+		}
+
+		if (!modified.needsTesting || Object.keys(modified.needsTesting).length === 0) {
+			modified.testEverything = true;
 			return modified;
 		}
 

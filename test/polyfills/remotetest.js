@@ -58,7 +58,7 @@ async function main() {
         return false;
       }
 
-      if (!modified.hasOtherChanges && !modified.hasManyPolyfillChanges && !modified.hasNoObservableChanges) {
+      if (!modified.testEverything) {
         const ua = new UA(uaString);
         
         let isNeeded = false;
@@ -117,7 +117,7 @@ async function main() {
   const director = process.argv.includes("director");
   const always = "always=" + (mode === "all" ? "yes" : "no");
   let feature = '';
-  if (!modified.hasOtherChanges && !modified.hasManyPolyfillChanges && !modified.hasNoObservableChanges) {
+  if (!modified.testEverything) {
     feature = `&feature=${Object.keys(modified.needsTesting).join(',')}`;
   }
   
