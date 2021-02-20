@@ -1,8 +1,6 @@
 
 /* globals proclaim, Symbol */
 
-// TODO : remove this comment
-
 it('is a function', function () {
 	proclaim.isFunction(Symbol);
 });
