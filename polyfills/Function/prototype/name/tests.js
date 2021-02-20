@@ -1,6 +1,8 @@
 /* eslint-env mocha, browser */
 /* global proclaim */
 
+// TODO : remove this comment
+
 it('returns the name "Function" for Function', function () {
 	proclaim.equal(Function.name, 'Function');
 });
