@@ -107,18 +107,37 @@ describe('WPT', function () {
 		proclaim.notOk(text1.isSameNode(null), "with null other node");
 	});
 
-	it('comments should be compared on reference',function() {
-		var comment1 = document.createComment("data");
-		var comment2 = document.createComment("data");
 
-		proclaim.ok(comment1.isSameNode(comment1), "self-comparison");
-		proclaim.notOk(comment1.isSameNode(comment2), "same properties");
-		proclaim.notOk(comment1.isSameNode(null), "with null other node");
-	});
+	if ((function () {
+		try {
+			document.createComment("data").constructor; // can throw with "Invalid Pointer"
+			return true;
+		} catch (_) {
+			return false;
+		}
+	})()) {
+		it('comments should be compared on reference', function () {
+			var comment1 = document.createComment("data");
+			var comment2 = document.createComment("data");
 
-	it('document fragments should be compared on reference',function() {
+			proclaim.ok(comment1.isSameNode(comment1), "self-comparison");
+			proclaim.notOk(comment1.isSameNode(comment2), "same properties");
+			proclaim.notOk(comment1.isSameNode(null), "with null other node");
+		});
+	}
+
+	it('document fragments should be compared on reference - createDocumentFragment',function() {
 		var documentFragment1 = document.createDocumentFragment();
 		var documentFragment2 = document.createDocumentFragment();
+
+		proclaim.ok(documentFragment1.isSameNode(documentFragment1), "self-comparison");
+		proclaim.notOk(documentFragment1.isSameNode(documentFragment2), "same properties");
+		proclaim.notOk(documentFragment1.isSameNode(null), "with null other node");
+	});
+
+	it('document fragments should be compared on reference - new DocumentFragment',function() {
+		var documentFragment1 = new DocumentFragment();
+		var documentFragment2 = new DocumentFragment();
 
 		proclaim.ok(documentFragment1.isSameNode(documentFragment1), "self-comparison");
 		proclaim.notOk(documentFragment1.isSameNode(documentFragment2), "same properties");

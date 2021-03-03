@@ -27,6 +27,12 @@
 		Node.prototype.contains = contains;
 	} else {
 		document.contains = Element.prototype.contains = contains;
+
+		var fragmentProto = document.createDocumentFragment().constructor.prototype;
+		fragmentProto.contains = contains;
+
+		Attr.prototype.contains = contains;
+		DocumentFragment.prototype.contains = contains;
 	}
 
 }());
