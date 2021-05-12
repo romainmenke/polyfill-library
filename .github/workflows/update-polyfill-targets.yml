@@ -7,7 +7,7 @@ jobs:
   android:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
       - uses: actions/setup-node@v2.1.5
         with:
           node-version: 12.x
@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ android ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
       - uses: actions/setup-node@v2.1.5
         with:
           node-version: 12.x
@@ -97,7 +97,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ chrome ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
       - uses: actions/setup-node@v2.1.5
         with:
           node-version: 12.x
@@ -142,7 +142,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ edge ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
       - uses: actions/setup-node@v2.1.5
         with:
           node-version: 12.x
@@ -187,7 +187,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ firefox ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
       - uses: actions/setup-node@v2.1.5
         with:
           node-version: 12.x
@@ -232,7 +232,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ ie ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
       - uses: actions/setup-node@v2.1.5
         with:
           node-version: 12.x
@@ -277,7 +277,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ ios ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
       - uses: actions/setup-node@v2.1.5
         with:
           node-version: 12.x

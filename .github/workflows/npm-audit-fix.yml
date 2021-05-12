@@ -12,7 +12,7 @@ jobs:
   run:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
       - uses: ybiquitous/npm-audit-fix-action@73483a6580886282a7419e5dba2c4167025dda91 # pin@v2.1.6
         with:
           github_token: ${{ secrets.ORIGAMI_GITHUB_TOKEN }}
