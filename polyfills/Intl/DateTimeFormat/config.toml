@@ -32,19 +32,19 @@ notes = [
 android = "*"
 ie = "9 - *"
 ie_mob = "9 - *"
-edge = "<71"
-edge_mob = "<71"
-firefox = "<51"
+edge = "<79"
+edge_mob = "<79"
+firefox = "*"
 opera = "*"
-chrome = "<71"
-safari = "<11"
-ios_saf = "<11"
+chrome = "<76"
+safari = "*"
+ios_saf = "*"
 firefox_mob = "*"
 samsung_mob = "*"
 
 [install]
 module = "@formatjs/intl-datetimeformat"
-paths = [ "polyfill.umd.js" ]
+paths = [ "polyfill.iife.js" ]
 postinstall = "update.task.js"
 clean = [
   "~locale",
