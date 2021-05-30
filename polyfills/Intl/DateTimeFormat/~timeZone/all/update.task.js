@@ -17,8 +17,7 @@ var TOML = require("@iarna/toml");
 function extractTimeZoneData() {
 	var ctx = {
 		result: null,
-		require: require,
-		console: console
+		require: require
 	};
 
 	var sandbox = vm.createContext(ctx);
