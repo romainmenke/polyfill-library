@@ -4147,7 +4147,7 @@ describe('Intl.DateTimeFormat.~timeZone.all', function () {
 		var date = new Date(Date.UTC(2012, 11, 20, 3, 0, 0, 200));
 		var options = {
 			weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-			timeZone: 'Africa/Dakar',
+			timeZone: 'Africa/Abidjan',
 			timeZoneName: 'short'
 		};
 
@@ -4158,10 +4158,20 @@ describe('Intl.DateTimeFormat.~timeZone.all', function () {
 		var date = new Date(Date.UTC(2012, 11, 20, 3, 0, 0, 200));
 		var options = {
 			weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-			timeZone: 'Africa/Dakar',
+			timeZone: 'Africa/Abidjan',
 			timeZoneName: 'long'
 		};
 
 		proclaim.equal(new Intl.DateTimeFormat('en', options).format(date).slice(-19), 'Greenwich Mean Time');
+	});
+	
+	it('returns chosen zone in resolvedOptions', function () {
+		var options = {
+			weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+			timeZone: 'Africa/Abidjan',
+			timeZoneName: 'long'
+		};
+
+		proclaim.equal(new Intl.DateTimeFormat('en', options).resolvedOptions().timeZone, 'Africa/Abidjan');
 	});
 });

@@ -35,6 +35,8 @@ samsung_mob = "*"
 [install]
 module = "@formatjs/intl-datetimeformat"
 paths = [ "/add-all-tz.js" ]
+postinstall = "update.task.js"
 clean = [
+  "~zone",
   "polyfill.js",
 ]
