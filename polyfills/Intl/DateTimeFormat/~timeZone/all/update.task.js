@@ -4,7 +4,7 @@
 
 var fs = require("graceful-fs");
 var path = require("path");
-var allTimeZoneData = require('@formatjs/intl-datetimeformat/src/data/all-tz.js')["default"];
+const vm = require('vm');
 
 var IntlPolyfillOutput = path.resolve("polyfills/Intl/DateTimeFormat/~timeZone/all/");
 var ZonesPolyfillOutput = path.resolve(
@@ -13,6 +13,33 @@ var ZonesPolyfillOutput = path.resolve(
 
 var mkdirp = require("mkdirp");
 var TOML = require("@iarna/toml");
+
+function extractTimeZoneData() {
+	var ctx = {
+		result: null,
+		require: require,
+		console: console
+	};
+
+	var sandbox = vm.createContext(ctx);
+
+	var script = new vm.Script(`
+		var Intl = {
+			DateTimeFormat: {
+				__addTZData: function(x) {
+					result = x;
+				}
+			}
+		};
+
+		${fs.readFileSync(require.resolve("@formatjs/intl-datetimeformat/add-all-tz.js")).toString()};
+	`);
+	
+  script.runInContext(sandbox, { timeout: 1000 });
+	return ctx.result;
+}
+
+var allTimeZoneData = extractTimeZoneData();
 
 function writeFileIfChanged(filePath, newFile) {
 	if (fs.existsSync(filePath)) {
@@ -90,11 +117,11 @@ allTimeZoneData.zones.forEach((zone) => {
 			...configSource,
 			notes: [],
 			aliases: [`Intl.DateTimeFormat.~timeZone.~zone.${zoneName}`],
-			test: (zoneName === 'Africa/Abidjan' ? { ci: true } : { ci: false })
+			test: (zoneName === 'Africa/Accra' ? { ci: true } : { ci: false })
 		})
 	);
 
-	if (zoneName === 'Africa/Abidjan') {
+	if (zoneName === 'Africa/Accra') {
 		writeFileIfChanged(testsOutputPath, testsSource);
 	}
 });

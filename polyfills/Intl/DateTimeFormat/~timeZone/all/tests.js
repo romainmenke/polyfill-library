@@ -4147,7 +4147,7 @@ describe('Intl.DateTimeFormat.~timeZone.all', function () {
 		var date = new Date(Date.UTC(2012, 11, 20, 3, 0, 0, 200));
 		var options = {
 			weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-			timeZone: 'Africa/Abidjan',
+			timeZone: 'Africa/Accra',
 			timeZoneName: 'short'
 		};
 
@@ -4158,7 +4158,7 @@ describe('Intl.DateTimeFormat.~timeZone.all', function () {
 		var date = new Date(Date.UTC(2012, 11, 20, 3, 0, 0, 200));
 		var options = {
 			weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-			timeZone: 'Africa/Abidjan',
+			timeZone: 'Africa/Accra',
 			timeZoneName: 'long'
 		};
 
@@ -4168,10 +4168,10 @@ describe('Intl.DateTimeFormat.~timeZone.all', function () {
 	it('returns chosen zone in resolvedOptions', function () {
 		var options = {
 			weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-			timeZone: 'Africa/Abidjan',
+			timeZone: 'Africa/Accra',
 			timeZoneName: 'long'
 		};
 
-		proclaim.equal(new Intl.DateTimeFormat('en', options).resolvedOptions().timeZone, 'Africa/Abidjan');
+		proclaim.equal(new Intl.DateTimeFormat('en', options).resolvedOptions().timeZone, 'Africa/Accra');
 	});
 });
