@@ -1,0 +1,5 @@
+polyfill.js
+~zone/*
+!~zone/AfricaAccra
+~zone/*/*
+!~zone/AfricaAccra/tests.js
