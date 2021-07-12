@@ -8,9 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.1.5
+      - uses: actions/setup-node@v2.2.0
         with:
           node-version: 12.x
+          cache: 'npm'
       - run: npm ci
       - run: npm run build
       - name: Run tests on android without polyfills
@@ -34,8 +35,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           curl -fsSL https://github.com/github/hub/raw/master/script/get | bash -s 2.14.1
-          for i in `git diff --name-only`; 
-          do 
+          for i in `git diff --name-only`;
+          do
             git checkout master;
             git config --global user.email "action@github.com"
             git config --global user.name "GitHub Action"
@@ -53,9 +54,10 @@ jobs:
     needs: [ android ]
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.1.5
+      - uses: actions/setup-node@v2.2.0
         with:
           node-version: 12.x
+          cache: 'npm'
       - run: npm ci
       - run: npm run build
       - name: Run tests on chrome without polyfills
@@ -79,8 +81,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           curl -fsSL https://github.com/github/hub/raw/master/script/get | bash -s 2.14.1
-          for i in `git diff --name-only`; 
-          do 
+          for i in `git diff --name-only`;
+          do
             git checkout master;
             git config --global user.email "action@github.com"
             git config --global user.name "GitHub Action"
@@ -98,9 +100,10 @@ jobs:
     needs: [ chrome ]
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.1.5
+      - uses: actions/setup-node@v2.2.0
         with:
           node-version: 12.x
+          cache: 'npm'
       - run: npm ci
       - run: npm run build
       - name: Run tests on edge without polyfills
@@ -124,8 +127,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           curl -fsSL https://github.com/github/hub/raw/master/script/get | bash -s 2.14.1
-          for i in `git diff --name-only`; 
-          do 
+          for i in `git diff --name-only`;
+          do
             git checkout master;
             git config --global user.email "action@github.com"
             git config --global user.name "GitHub Action"
@@ -143,9 +146,10 @@ jobs:
     needs: [ edge ]
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.1.5
+      - uses: actions/setup-node@v2.2.0
         with:
           node-version: 12.x
+          cache: 'npm'
       - run: npm ci
       - run: npm run build
       - name: Run tests on firefox without polyfills
@@ -169,8 +173,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           curl -fsSL https://github.com/github/hub/raw/master/script/get | bash -s 2.14.1
-          for i in `git diff --name-only`; 
-          do 
+          for i in `git diff --name-only`;
+          do
             git checkout master;
             git config --global user.email "action@github.com"
             git config --global user.name "GitHub Action"
@@ -188,9 +192,10 @@ jobs:
     needs: [ firefox ]
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.1.5
+      - uses: actions/setup-node@v2.2.0
         with:
           node-version: 12.x
+          cache: 'npm'
       - run: npm ci
       - run: npm run build
       - name: Run tests on ie without polyfills
@@ -214,8 +219,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           curl -fsSL https://github.com/github/hub/raw/master/script/get | bash -s 2.14.1
-          for i in `git diff --name-only`; 
-          do 
+          for i in `git diff --name-only`;
+          do
             git checkout master;
             git config --global user.email "action@github.com"
             git config --global user.name "GitHub Action"
@@ -233,9 +238,10 @@ jobs:
     needs: [ ie ]
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.1.5
+      - uses: actions/setup-node@v2.2.0
         with:
           node-version: 12.x
+          cache: 'npm'
       - run: npm ci
       - run: npm run build
       - name: Run tests on ios without polyfills
@@ -259,8 +265,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           curl -fsSL https://github.com/github/hub/raw/master/script/get | bash -s 2.14.1
-          for i in `git diff --name-only`; 
-          do 
+          for i in `git diff --name-only`;
+          do
             git checkout master;
             git config --global user.email "action@github.com"
             git config --global user.name "GitHub Action"
@@ -278,9 +284,10 @@ jobs:
     needs: [ ios ]
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.1.5
+      - uses: actions/setup-node@v2.2.0
         with:
           node-version: 12.x
+          cache: 'npm'
       - run: npm ci
       - run: npm run build
       - name: Run tests on safari without polyfills
@@ -305,8 +312,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           curl -fsSL https://github.com/github/hub/raw/master/script/get | bash -s 2.14.1
-          for i in `git diff --name-only`; 
-          do 
+          for i in `git diff --name-only`;
+          do
             git checkout master;
             git config --global user.email "action@github.com"
             git config --global user.name "GitHub Action"
